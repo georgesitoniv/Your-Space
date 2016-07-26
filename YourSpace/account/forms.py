@@ -5,7 +5,8 @@ from .models import Profile
 
 class LogInForm(forms.Form):
     """
-        Form for logging in
+        Form for logging in. Contains username and password fields. This form will be used if the user does not want
+        to log in using facebook.
     """
     username = forms.CharField(max_length = 20)
     password = forms.CharField(widget=forms.PasswordInput)
