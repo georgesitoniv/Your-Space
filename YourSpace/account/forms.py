@@ -28,11 +28,17 @@ class UserRegistrationForm(forms.ModelForm):
             if char == " ":
                 raise forms.ValidationError("Please dont use spaces")
         return cd['username']
+    
+
 
     def clean_password_validate(self):
         cd = self.cleaned_data
-        if cd['password'] != cd['password_validate']:
-            raise forms.ValidationError("Passwords does not match")
+        try:
+            if cd['password'] != cd['password_validate']:
+                raise forms.ValidationError("Passwords does not match")
+        except KeyError:
+            raise forms.ValidationError("Password is required")
+            
         return cd['password_validate']
 
 

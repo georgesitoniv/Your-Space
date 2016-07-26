@@ -15,19 +15,6 @@
         <form class="form-horizontal" action="."  method = "POST" role="form" style = "text-align:center">
 
 
-          {% if form.errors %}
-          <div class="alert alert-danger">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <p>
-              Please provide a valid username and password.
-            </p>
-          </div>
-         
-          {% else %}
-            <p>
-              Please provide the neccessary credentials.
-            </p>
-          {% endif %}
 
           {% csrf_token %}
             {% for field in form %}
@@ -43,7 +30,7 @@
             </div>
             {% if field.errors %}
               <div style="color:red;">
-                
+                {{field.errors.as_text}}
               </div>
             {% endif %}
           {% endfor %}

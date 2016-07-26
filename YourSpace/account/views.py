@@ -42,15 +42,17 @@ class LogIn(AnonymousRequiredMixin, View):
                 if user.is_active:
 
                     login(request, user)
-                    
+                    return HttpResponseRedirect(reverse_lazy("account:timeline"))
                 else:
                     message.error(request,"Account Disabled")
+            else:
+                messages.error(request, "User does not exist")
 
         context = {
             'form': form
         }
 
-        return HttpResponseRedirect(reverse_lazy("account:timeline"))
+        return render(request, self.template, context)
 
 @login_required
 def timeline(request, template="account/timeline.html", page_template="post/post.html"):
