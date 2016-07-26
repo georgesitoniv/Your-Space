@@ -46,7 +46,7 @@ class LogIn(AnonymousRequiredMixin, View):
                 else:
                     message.error(request,"Account Disabled")
             else:
-                messages.error(request, "User does not exist")
+                messages.error(request, "Invalid Username or Password")
 
         context = {
             'form': form
