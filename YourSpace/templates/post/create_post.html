@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+
+{% block title %}{{ page_title }}{% endblock %}
+
+
+{% block content %}
+
+
+  <div class = "container" style="padding-left:30%;padding-right:30%;">
+
+
+    <div class="panel panel-default">
+      <div class="panel-heading" style="text-align:center">{{ page_title }}</div>
+      <div class="panel-body">
+        
+        <form class="form-horizontal" action="."  enctype="multipart/form-data" method = "POST" role="form" style = "text-align:left;">
+          {% if post.user %}
+            <div style="float:right;">
+              <button  type="submit" name="remove_post_button" class="btn btn-danger">
+                <span class="glyphicon glyphicon-trash"></span>Remove Post
+              </button> 
+            </div>
+          {% endif %}
+          <br><br>
+          {% if post.image %}
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-offset-3 col-sm-4">
+                  
+                    <img style="max-width: 200px; border:1px solid black; border-radius:10px;width:auto;" src="{{ post.image.url }}"/>
+                  
+                </div>
+               </div>
+            </div>
+           {% endif %}
+          {% csrf_token %}
+          {% for field in post_form.visible_fields %}
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-offset-1 col-sm-4">
+                  {{field.label}}:
+                </div>
+
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-offset-2 col-sm-6">
+                  {{field}}
+                </div>
+              </div>
+
+            </div>
+            
+
+            {% if field.errors %}
+              <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {{field.errors.as_text}}
+              </div>
+            {% endif %}
+          {% endfor %}
+
+         
+          
+         <br>
+         <div class="form-group">
+           <div class="col-sm-offset-5 col-sm-5">
+             <button type="submit" name="post_button" class="btn btn-success">
+               <span class="glyphicon glyphicon-check"></span>Post
+              </button>
+           </div>
+          </div>
+        </form>
+         <a href="{% url 'account:profile' username=request.user.username %}">Back</a>
+      </div>
+    </div>
+
+
+  </div>
+
+{% endblock %}

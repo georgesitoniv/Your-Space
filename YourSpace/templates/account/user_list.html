@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title%}Users{% endblock %}
+
+{% block content%}
+
+  <div class = "container" style="padding-left:30%;padding-right:30%;">
+
+    <div class="panel panel-default" >
+      <div class="panel-heading" style="text-align:center">People</div>
+      <div class="panel-body" style="max-height:600px;overflow-x:hidden;">
+
+        <div style="text-align:center;">
+
+        </div>
+        <table class="table table-striped" style="text-align:center;width:100%;">
+
+            <tbody>
+
+                {% for user in users %}
+                    {% if request.user.username != user.username%}
+                        <tr>
+                            <td>
+                                <a href="{% url 'account:profile' username=user.username %}">
+                                    {% if user.first_name and user.last_name %}
+                                        {{user.first_name}} {{user.last_name}}
+                                    {% else %}
+                                        {{ user.username }}
+                                    {% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+   
+        
+
+        <p><a href="{% url 'account:timeline' %}">Back</a></p>
+      </div>
+    </div>
+
+
+  </container>
+{% endblock %}

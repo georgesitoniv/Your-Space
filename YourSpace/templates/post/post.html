@@ -1,0 +1,100 @@
+
+
+
+
+
+
+<div id="post-{{post.id}}" class="panel panel-default post">
+
+                    
+    <div class="panel-body">
+        {% if not view %}
+        <div class="btn-group" role="group"  style="float:right;">                          
+            {% if request.user.username == post.user.username %}
+        
+          
+            <a  class="btn btn-info" style="color:white;" href="{% url 'post:edit_post' id=post.id %}">
+                <span class="glyphicon glyphicon-edit">         
+                </span>
+                Edit
+            </a>
+    
+            {% endif %}
+        
+            <a  class="btn btn-info" style="color:white;" href="{% url 'post:post_instance' id=post.id %}">
+                <span class="glyphicon glyphicon-info-sign">         
+                </span>
+                View
+            </a>
+            
+        </div>
+        {% endif %}
+        
+        
+            
+        <table style="text-align:left;">
+            <tr>
+                <td rowspan="2">
+                    {% if post.user.profile.photo %}
+                    <div class="post-user-image">
+                        <a href="{% url 'account:profile' username=post.user.username%}">
+                            <img  src="{{ post.user.profile.photo.url }}">
+                         </a>
+                   </div>
+                   {% else %}
+                      <div class="post-user-image">
+                        <a href="{% url 'account:profile' username=post.user.username%}">      
+                 	      <span class="no-image glyphicon glyphicon-user"></span>     
+                        </a>
+                      </div>
+                   {% endif %}
+                </td>
+                <td style="padding-left:10px;">
+                    {% if post.user.first_name and post.user.last_name %}
+                        {{post.user.first_name}} {{post.user.last_name}}
+                    {% else %}
+                        {{post.user.username }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-left:10px;">{{ post.date_updated }}</td>
+            </tr>
+        </table>
+
+        <br>
+        <table class="table" style="width:100%;height:100%">
+            <tbody>
+                <tr>
+                    <td>
+                                
+          
+                        <br>
+                        {% if post.content %}
+                            <div style="text-align: left;">
+                                {{ post.content }}
+                            </div>
+                            <br><br>
+                        {% endif %}
+                        {% if post.image %}
+                            <a data-toggle="modal" href="#" data-target="#modal-post-{{post.id}}">
+                                <img style="max-width:100%;max-height:250px;width:auto;height:auto;" src="{{ post.image.url }}">
+                            </a>
+                            {% include 'post/image_modal.html' %}
+                        {% endif %}
+                  
+                  
+                    </td>
+
+                 </tr>
+
+
+            </tbody>
+        </table>
+  
+
+             
+                    
+    </div>
+
+</div>

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Edit your information{% endblock %}
+
+{% block content %}
+
+  <div class = "container" style="padding-left:20%;padding-right:20%;">
+
+    <ul class="nav nav-tabs nav-justified">
+      
+      <li class="active"><a data-toggle="tab" href="#editProfile">Edit Profile</a></li>
+      {% if not request.user.profile.is_using_social_auth %}
+        <li><a data-toggle="tab" href="#changePassword">Change Password</a></li>
+      {% endif %}
+
+    </ul>
+
+    <div class="tab-content">
+      
+      <div id="editProfile" class="tab-pane fade in active">
+
+          <div class="panel panel-default">
+            <div class="panel-body">
+
+              <form class="form-horizontal" action="."  method = "POST" enctype="multipart/form-data" role="form" style = "text-align:left;">
+                {% csrf_token %}
+                 <br>
+                {% for field in user_form %}
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-sm-offset-2 col-sm-4">
+                        {{field.label}}:
+                      </div>
+                      <div class="col-sm-offset-1 col-sm-5">
+                        {{field}}
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+
+                <div class="form-group">
+                  <div class="row">
+
+                  <div class="col-sm-offset-2 col-sm-4">
+                      {{profile_form.date_of_birth.label}}                        
+                    </div>
+                    <div class="col-sm-offset-1 col-sm-3">
+                      <input id="id_date_of_birth" name="date_of_birth" type="date">                       
+                    </div>                     
+
+                  </div>
+                  <br>
+                  <div class="col-sm-offset-2 col-sm-4">
+                      {{profile_form.description.label}}                        
+                    </div>
+                    <div class="col-sm-offset-1 col-sm-3">
+                      {{profile_form.description}}                      
+                    </div>                     
+
+                  </div>
+
+                  <br>
+
+                  <div class="row">
+                    <div class="col-sm-offset-2 col-sm-4">
+                      {{profile_form.photo.label}}                          
+                    </div>
+
+                    <div class="col-sm-offset-1 col-sm-3">
+                      {{profile_form.photo}}
+                    </div>
+
+                  </div>
+
+                
+
+                <br><br>
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-sm-offset-4 col-sm-4">
+                      {% if profile_form.photo and request.user.profile.photo %}
+                        <img style="max-width: 200px; border:1px solid black; width:auto;" src="{{ request.user.profile.photo.url }}"/>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                {% if field.errors %}
+                  <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{field.errors.as_text}}
+                  </div>
+                {% endif %}
+
+                <br>
+                <div class="form-group">
+                  <div class="col-sm-offset-4 col-sm-4" style="padding-left:50px;">
+                    <button type="submit" name="account_update_button" class="btn btn-success">
+                      <span class="glyphicon glyphicon-ok"></span>
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </form>
+              
+            </div>
+          </div>
+        </div>
+              
+   
+     
+      <div id="changePassword" class="tab-pane fade">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                  <form class="form-horizontal" action="."  method = "POST" enctype="multipart/form-data" role="form" style = "text-align:left;">
+                    {% csrf_token %}
+                    <br>
+                    {% for field in password_form %}
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-sm-offset-2 col-sm-4">
+                            {{field.label}}:
+                          </div>
+                          <div class="col-sm-offset-1 col-sm-3">
+                            {{field}}
+                          </div>
+                        </div>
+                      </div>
+                      {% if field.errors %}
+                        <div class="alert alert-danger">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                          {{field.errors.as_text}}
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+
+
+
+                    <br>
+                    <div class="form-group">
+                      <div class="col-sm-offset-5 col-sm-4">
+                        <button type="submit" name="password_update_button" class="btn btn-success">
+                          <span class="glyphicon glyphicon-ok"></span>
+                          Save Changes
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+
+              </div>
+             </div>
+          </div>
+
+      </div>
+
+  </div>
+   
+
+
+  
+
+{% endblock %}

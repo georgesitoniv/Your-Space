@@ -1,0 +1,35 @@
+
+
+<div id="modal-post-{{post.id}}" class="modal fade" role="dialog">
+    <div style="float:right;">
+        <div class="modal-close" data-dismiss="modal">
+            <a href="#">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+        </div>
+    </div>
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">    
+            {% if post.image %}
+                <img class="modal-image" src="{{post.image.url}}"/>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div id="modal-profile-{{user.id}}" class="modal fade" role="dialog">
+    <div style="float:right;">
+        <div class="modal-close" data-dismiss="modal">
+            <a href="#">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+        </div>
+    </div>
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">    
+            {% if user.profile.photo %}
+                <img class="modal-image" src="{{user.profile.photo.url}}"/>
+            {% endif %}
+        </div>
+    </div>
+</div>

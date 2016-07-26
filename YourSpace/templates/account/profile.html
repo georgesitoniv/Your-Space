@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+  <div class = "container" style="padding-left:20%;padding-right:20%;">
+
+          <div class="panel panel-default"  style=" text-align:center; margin-top:px">
+            <br>
+            <div class="panel-body" >
+            
+             <div class="form-group">
+               <div class="row">
+                 <div class="col-sm-offset-4 col-sm-4">
+                    {% if user.profile.photo %}
+                      <div class="profile-photo">
+                        <a data-toggle="modal" href="#" data-target="#modal-profile-{{user.id}}">
+                          <img class="user-image"  src="{{ user.profile.photo.url }}"/>
+                        </a>
+                        {% include 'post/image_modal.html' %}
+                      </div>
+                    {% else %}
+                      <div class="profile-photo">      
+                        <span class="no-image glyphicon glyphicon-user">
+                        </span>
+                     
+                      </div>
+                    {% endif %}
+                   
+                 </div>
+               </div>
+             </div>
+
+             <div class="panel-heading">
+              {% if user.first_name and user.last_name %}
+                {{user.first_name}} {{user.last_name}}
+              {% else %}
+                {{ user.username }}
+              {% endif %}
+            </div>
+            <br>
+
+            <table class="table table-striped" style="text-align:center;width:100%;">
+              <tbody>
+
+                <tr>
+                  <td> Birthday: </td>
+                  <td>
+                    {% if user.profile.date_of_birth %}
+                       {{user.profile.date_of_birth}}
+                    {% else %}
+                        {% if user.username != request.user.username %}
+                          User's birthday has not been edited
+                        {% else %}
+                          Please edit your birthday
+                        {% endif %}
+                    {% endif %}
+                  </td>
+                </tr>
+                <tr>
+                  <td> Description: </td>
+                  <td>
+                    {% if user.profile.description %}
+                       {{user.profile.description}}
+                    {% else %}
+                        {% if user.username != request.user.username %}
+                          User's description has not been edited
+                        {% else %}
+                          Please edit your description
+                        {% endif %}
+                    {% endif %}
+                  </td>
+                </tr>
+  
+              </tbody>
+            </table>
+
+            {% if user.username != request.user.username %}
+              <form class="form-horizontal" action="." method = "POST" role="form" style = "text-align:center">
+                  {% csrf_token %}
+                  <div class="row">
+                      <div class="col-sm-offset-4 col-sm-4">
+                          {% if follows %}
+                             <button type="submit" name="unfollow_button" class="btn btn-warning">
+                               <span class="glyphicon glyphicon-eye-close"></span>
+                               Unfollow
+                              </button>
+                          {% else %}                            
+                            <button type="submit" name="follow_button"  class="btn btn-success">
+                              <span class="glyphicon glyphicon-eye-open"></span>
+                              Follow
+                            </button>
+                          {% endif %}
+                      </div>
+                  </div>
+
+                </form>
+            {% endif %}
+              
+            <br>
+          </div>
+        </div>
+
+    <ul class="nav nav-tabs nav-justified">
+      
+      <li class="active"><a data-toggle="tab" href="#post">Posts</a></li>
+      <li><a data-toggle="tab" href="#followers">Followers</a></li>
+      <li><a data-toggle="tab" href="#followed">Followed</a></li>
+    </ul>
+
+    <div class="tab-content">
+      
+
+
+      <div id="post" class="tab-pane fade in active">
+ 
+            
+          <div class="panel panel-default">
+            <br>
+            <div class="panel-body" style="margin:auto;text-align:center;">
+
+
+
+                {% if request.user.username = user.username %}
+                  <a class="btn btn-primary" style="float:right;" href="{% url 'post:create_post' %}">
+                    <span class="glyphicon glyphicon-pencil"></span>Create a Post
+                  </a>
+                  <br><br>
+                {% endif %}
+                
+                  <br>
+                  {% if post_count != 0 %}
+                    {% for post in posts %}
+                      {% include 'post/post.html' %}
+                    {% endfor %}
+                  {% else %}
+                    {% if request.user.username == user.username %}
+                      You havent made a post.<br>
+                    {% else %}
+                      User have not made a post.
+                    {% endif %}
+                  {% endif %}
+
+                  {% if posts.paginator.num_pages > 1 %}
+                  <div class="text-align:right;">
+                    {% if posts.has_previous %}  
+                        <a href="?page={{ posts.previous_page_number }}#post"><span style="color:black;" class="glyphicon glyphicon-menu-left"></span></a>
+                    {% endif %}
+
+                    <span class="current">
+                      Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+                    </span>
+
+                    {% if posts.has_next %}             
+                        <a href="?page={{ posts.next_page_number }}#post"><span style="color:black;" class="glyphicon glyphicon-menu-right"></span></a>  
+                    {% endif %}
+                  </div>
+                  
+                {% endif %}
+
+                 <br>          
+            
+          </div>
+        </div>
+        
+      </div>
+
+       <div id="followers" class="tab-pane fade">
+     
+          <div class="panel panel-default" >
+            <br>
+            <div class="panel-body" style="text-align:center;max-height:600px;overflow-x:hidden;">
+
+            Followers: {{user.profile.followers.count}}
+            <br><br>
+            {% if user.profile.followers.count != 0 %}
+           <table class="table" style="text-align:center;width:100%;">
+
+            <tbody>
+              
+                
+                  {% for follower in user.profile.followers.all %}
+                      <tr>
+                          <td>
+                              
+                              <a href="{% url 'account:profile' username=follower.user.username %}">
+                                  {% if follower.user.first_name and follower.user.last_name %}
+                                      {{follower.user.first_name}} {{follower.user.last_name}}
+                                  {% else %}
+                                      {{ follower.user.username }}
+                                  {% endif %}
+                              </a>
+                          </td>
+                      </tr>
+                  {% endfor %}
+   
+
+
+              </tbody>
+
+            </table>
+            {% else %}
+              {% if user.username == request.user.username %}
+                You have no followers yet<br>
+              {% else %}
+                 User has no followers yet
+              {% endif %}
+            {% endif %}
+               
+              <br>
+
+          </div>
+        </div>
+      </div>
+      
+      <div id="followed" class="tab-pane fade">
+     
+          <div class="panel panel-default" >
+            <br>
+            <div class="panel-body" style="text-align:center;max-height:600px;overflow-x:hidden;">
+
+            Followed Users: {{ user.profile.follow.count }}
+            <br><br>
+            {% if user.profile.follow.count != 0 %}
+           <table class="table" style="text-align:center;width:100%;">
+
+            <tbody>
+              
+                
+                  {% for follower in user.profile.follow.all %}
+                      <tr>
+                          <td>
+                              
+                              <a href="{% url 'account:profile' username=follower.user.username %}">
+                                  {% if follower.user.first_name and follower.user.last_name %}
+                                      {{follower.user.first_name}} {{follower.user.last_name}}
+                                  {% else %}
+                                      {{ follower.user.username }}
+                                  {% endif %}
+                              </a>
+                          </td>
+                      </tr>
+                  {% endfor %}
+   
+
+
+              </tbody>
+
+            </table>
+            {% else %}
+              
+              You have not followed other users yet<br>
+              <a href="{% url 'account:user_list' %}">Follow other users</a>
+    
+            {% endif %}
+               
+              <br>
+
+          </div>
+        </div>
+      </div>
+      
+
+      </div>
+
+    </div>
+    <br><br><br>
+    
+
+  
+
+{% endblock %}
