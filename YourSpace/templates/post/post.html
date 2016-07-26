@@ -8,28 +8,35 @@
 
                     
     <div class="panel-body">
+
+        
         {% if not view %}
-        <div class="btn-group" role="group"  style="float:right;">                          
+        <div style="float:right;">
+    
+
+        </div>
+       
+
+   
+        <div  style="float:right;">                          
             {% if request.user.username == post.user.username %}
         
           
-            <a  class="btn btn-info" style="color:white;" href="{% url 'post:edit_post' id=post.id %}">
-                <span class="glyphicon glyphicon-edit">         
-                </span>
-                Edit
+            <a  class="btn btn-warning btn-circle-md" style="color:white;" href="{% url 'post:edit_post' id=post.id %}">
+                <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>   
             </a>
+        
+            
     
             {% endif %}
         
-            <a  class="btn btn-info" style="color:white;" href="{% url 'post:post_instance' id=post.id %}">
-                <span class="glyphicon glyphicon-info-sign">         
-                </span>
-                View
+            <a  class="btn btn-info btn-circle-md" style="color:white;" href="{% url 'post:post_instance' id=post.id %}">
+                <i class="fa fa-info fa-lg" aria-hidden="true"></i>
             </a>
             
         </div>
         {% endif %}
-        
+     
         
             
         <table style="text-align:left;">

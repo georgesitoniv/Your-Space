@@ -45,7 +45,6 @@ INSTALLED_APPS = (
     'account',
     'post',
     'social.apps.django_app.default',
-    'endless_pagination',
 )
 
 MIDDLEWARE_CLASSES = (

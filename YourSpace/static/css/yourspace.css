@@ -9,11 +9,15 @@ body{
 .panel-heading{
     font-size: 1.5em;
 }
-.panel-profile{
-    border-radius: 20px 20px 0 0;
+
+.panel-form{
+    max-width: 550px;
+    margin: auto;
 }
-
-
+.panel-profile{
+    max-width:700px;
+    margin: auto;
+}
 
 .profile-photo{
     left: 0;
@@ -71,6 +75,16 @@ body{
   line-height: 1.428571429;
   border-radius: 20px;
 }
+
+.btn-circle-md {
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  padding: 3px 13px;
+  font-size: 15px;
+  line-height: 2.428571429;
+  border-radius: 40px;
+}
 .post{
     margin: 20px auto;
     text-align:center;
@@ -111,4 +125,15 @@ body{
     position:fixed;
     top:40%;
 }
+.wrapword{
+    white-space: -moz-pre-wrap !important;  
+    white-space: -webkit-pre-wrap; 
+    white-space: -pre-wrap;      
+    white-space: -o-pre-wrap;    
+    white-space: pre-wrap;       
+    word-wrap: break-word;       
+    word-break: break-all;
+    white-space: normal;
+}
+
 

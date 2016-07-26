@@ -79,7 +79,7 @@ class ProfileEditForm(forms.ModelForm):
         widgets = {
             'date_of_birth' :forms.DateInput,
             'description':forms.Textarea(attrs={
-                'cols':30,
+                'cols':40,
                 'rows':4,
                 'style':'resize:none'
                 }),

@@ -7,18 +7,18 @@
 {% block content %}
 
 
-  <div class = "container" style="padding-left:30%;padding-right:30%;">
+  <div class = "container">
 
 
-    <div class="panel panel-default">
+    <div class="panel panel-default panel-form">
       <div class="panel-heading" style="text-align:center">{{ page_title }}</div>
       <div class="panel-body">
         
         <form class="form-horizontal" action="."  enctype="multipart/form-data" method = "POST" role="form" style = "text-align:left;">
           {% if post.user %}
             <div style="float:right;">
-              <button  type="submit" name="remove_post_button" class="btn btn-danger">
-                <span class="glyphicon glyphicon-trash"></span>Remove Post
+              <button  type="submit" name="remove_post_button" class="btn btn-danger btn-circle-md">
+                <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
               </button> 
             </div>
           {% endif %}
@@ -45,7 +45,7 @@
               </div>
               <br>
               <div class="row">
-                <div class="col-sm-offset-2 col-sm-6">
+                <div class="col-sm-offset-1 col-sm-6">
                   {{field}}
                 </div>
               </div>
@@ -67,7 +67,7 @@
          <div class="form-group">
            <div class="col-sm-offset-5 col-sm-5">
              <button type="submit" name="post_button" class="btn btn-success">
-               <span class="glyphicon glyphicon-check"></span>Post
+               <span class="glyphicon glyphicon-check"></span> Post
               </button>
            </div>
           </div>

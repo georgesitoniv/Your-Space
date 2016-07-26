@@ -34,14 +34,13 @@
                                         <form  method="POST">
                                             {% csrf_token %}
                                             {% if not has_liked %}
-                                            <button type="submit" id="like" name="like_button" class="btn btn-primary" >
-                                                <span class="glyphicon glyphicon-thumbs-up"></span>
-                                                Like
-                                            
+                                            <button type="submit" id="like" name="like_button" class="btn btn-primary btn-circle-md" >
+                                                <i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>
+
+                                            </button>
                                             {% else %}
-                                            <button type="submit" name="unlike_button" class="btn btn-primary" >
-                                                <span class="glyphicon glyphicon-thumbs-up"></span>
-                                                Unlike
+                                            <button type="submit" name="unlike_button" class="btn btn-primary btn-circle-md" >
+                                               <i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>
                                             
                                             </button>
                                             {% endif %}
@@ -60,10 +59,10 @@
                 </div>
         </div>
         <div id="comments" class="tab-pane fade">
-            <div class="panel panel-default" style="text-align:center; border-raius:20px;">
+            <div class="panel panel-default" style="text-align:left">
                     <div class="panel-body">
 
-                        <table class="table" style="width:100%;">
+                        <table class="table" style="table-layou:fixed; width:100%;">
                             {% if comments.count != 0 %}
                                 {% for comment in comments %}      
                                     <tr>
@@ -88,7 +87,7 @@
                                                 {{comment.user.username}}
                                             {% endif %}
                                             </td>
-                                        <td>{{ comment.content }}</td>
+                                        <td  class="wrapword">{{ comment.content }}</td>
                                         {% if comments == request.user %}
                                         <td>
                                             <form method="POST">

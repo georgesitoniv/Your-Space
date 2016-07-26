@@ -21,14 +21,36 @@
 
           <div class="panel panel-default">
             <div class="panel-body">
-
+ 
               <form class="form-horizontal" action="."  method = "POST" enctype="multipart/form-data" role="form" style = "text-align:left;">
                 {% csrf_token %}
                  <br>
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-lg-offset-4 col-lg-4" style="padding-left:50px;">
+                        {% if user.profile.photo %}
+                          <div class="profile-photo">
+
+                              <img class="user-image"  src="{{ user.profile.photo.url }}"/>
+      
+                 
+                          </div>
+                        {% else %}
+                          <div class="profile-photo">      
+                            <span class="no-image glyphicon glyphicon-user">
+                            </span>
+                        
+                          </div>
+                        {% endif %}
+                      
+                    </div>
+                  </div>
+                </div>
+                <br><br>
                 {% for field in user_form %}
                   <div class="form-group">
                     <div class="row">
-                      <div class="col-sm-offset-2 col-sm-4">
+                      <div class="col-sm-offset-2 col-sm-3">
                         {{field.label}}:
                       </div>
                       <div class="col-sm-offset-1 col-sm-5">
@@ -41,49 +63,40 @@
                 <div class="form-group">
                   <div class="row">
 
-                  <div class="col-sm-offset-2 col-sm-4">
-                      {{profile_form.date_of_birth.label}}                        
+                    <div class="col-sm-offset-2 col-sm-4">
+                      {{profile_form.date_of_birth.label}}:                        
                     </div>
-                    <div class="col-sm-offset-1 col-sm-3">
+                    <div class="col-sm-3">
                       <input id="id_date_of_birth" name="date_of_birth" type="date">                       
                     </div>                     
 
                   </div>
                   <br>
-                  <div class="col-sm-offset-2 col-sm-4">
-                      {{profile_form.description.label}}                        
+
+                  <div class="row">
+                    <div class="col-sm-offset-2 col-sm-4">
+                      {{profile_form.photo.label}}:                          
                     </div>
-                    <div class="col-sm-offset-1 col-sm-3">
+
+                    <div class="col-sm-3">
+                      {{profile_form.photo}}
+                    </div>
+
+                  </div>
+                   <br>
+                  <div class="row">
+                    <div class="col-sm-offset-2 col-sm-8" style="text-align:center;">
+                      {{profile_form.description.label}}:                        
+                      <br><br>
                       {{profile_form.description}}                      
                     </div>                     
 
                   </div>
 
-                  <br>
+                 
 
-                  <div class="row">
-                    <div class="col-sm-offset-2 col-sm-4">
-                      {{profile_form.photo.label}}                          
-                    </div>
 
-                    <div class="col-sm-offset-1 col-sm-3">
-                      {{profile_form.photo}}
-                    </div>
-
-                  </div>
-
-                
-
-                <br><br>
-                <div class="form-group">
-                  <div class="row">
-                    <div class="col-sm-offset-4 col-sm-4">
-                      {% if profile_form.photo and request.user.profile.photo %}
-                        <img style="max-width: 200px; border:1px solid black; width:auto;" src="{{ request.user.profile.photo.url }}"/>
-                      {% endif %}
-                    </div>
-                  </div>
-                </div>
+ 
                 {% if field.errors %}
                   <div class="alert alert-danger">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -105,7 +118,7 @@
             </div>
           </div>
         </div>
-              
+      </div>   
    
      
       <div id="changePassword" class="tab-pane fade">
