@@ -22,19 +22,17 @@
       {% endif %}
     {% endif %}
 
+  <div class="container timeline">
 
-  <div class="container" style="text-align:center;padding-right:20%;padding-left:20%;">
-
-    <a class="btn btn-primary" style="float:right;" href="{% url 'post:create_post' %}">
-      <span class="glyphicon glyphicon-pencil"></span>Create a Post
-    </a>
-    
- 
     <div style="margin:auto">
 
       <form method="POST" action="." style="text-align:left;">
         {% csrf_token %}
-        <div class="btn-group">
+        <div class="btn-group" role="group">
+          <a class="btn btn-primary" href="{% url 'post:create_post' %}">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            Create a Post
+          </a> 
           <button type="submit" name="sortByNewest_button" class="btn btn-default">
             <span class="glyphicon glyphicon-sort-by-order-alt"></span>
               Newest
@@ -50,8 +48,6 @@
         </div>
       </form>
 
-      <br>
-
 
       {% if post_count != 0 %}
 
@@ -61,16 +57,12 @@
  
       {% else %}
 
-        <div class="panel panel-default" style="text-align:center;mid-height:300px;height:auto; width:auto;">    
-    
-        
+        <div class="panel panel-default" style="text-align:center;mid-height:300px;height:auto; width:auto;">           
           <div class="panel-body">
             You have not followed anyone<br>
             <a href="{% url 'account:user_list' %}">Follow Users</a>
           </div>
-
         </div>
-
       {% endif %}
 
     </div>
@@ -82,18 +74,5 @@
     {% endif %}
 
   </div>
-  
-
-  
- 
-  <div class="pagination">
-    <span class="step-links">
-
-    </span>
-  </div> 
-              
 
 {% endblock %}
-
-
-

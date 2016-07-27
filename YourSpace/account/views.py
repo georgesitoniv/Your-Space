@@ -10,18 +10,15 @@ from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
 from braces.views import AnonymousRequiredMixin
-
 from .forms import LogInForm, UserRegistrationForm, UserEditForm, ProfileEditForm, PasswordChangeForm
 from .models import Profile
 from post.models import Post
 
 
 class LogIn(AnonymousRequiredMixin, View):
-
     """
         Log in view. Uses anonymous required mixin to prevent the user to access this view when logged in
-    """
-    
+    """ 
     template = "registration/login.html"
 
     def get(self, request):
@@ -60,17 +57,14 @@ def timeline(request, template="account/timeline.html", page_template="post/post
         Timeline view. Contains post by followed users
     """   
     post = Post.objects.filter(user__in = request.user.profile.get_timeline_users()).order_by("-date_updated")
-
     context = {
         'posts' : post,
         'page_template':page_template,        
     }
-
     if request.is_ajax():
         template = page_template
 
     return render(request, template, context)
-    
 
 @login_required
 def timeline_paginated(request):
@@ -110,7 +104,6 @@ def timeline_paginated(request):
     }
 
     return render(request, 'account/timeline.html', context)
-
 
 @login_required
 def profile(request, username='test'):
@@ -153,9 +146,6 @@ def profile(request, username='test'):
 
     return render(request, 'account/profile.html', context)
 
-     
-
-
 def user_list(request):
     """
          A view that displays all users
@@ -167,7 +157,6 @@ def user_list(request):
     }
 
     return render(request, 'account/user_list.html', context)
-    
 
 class RegisterForm(View):
     """
@@ -199,10 +188,6 @@ class RegisterForm(View):
 
         return render(request, self.template, context)
 
-
-
-
-
 class ProfileEdit(View):
     """
       This view lets users to edit their information and profile. It uses two forms which are
@@ -211,7 +196,6 @@ class ProfileEdit(View):
     template = 'account/edit_profile.html'
 
     def get(self, request):
-
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
         password_form = PasswordChangeForm()
@@ -219,15 +203,14 @@ class ProfileEdit(View):
             'user_form' : user_form,
             'profile_form' : profile_form,
             'password_form':password_form,
-        }
-        
-       
+        }  
         return render(request, self.template, context)
 
     def post(self, request):
         user_form = UserEditForm(instance=request.user, data=request.POST)
         profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
         password_form = PasswordChangeForm()
+        
         if "account_update_button" in request.POST:        
             if user_form.is_valid() and profile_form.is_valid():
                 user_form.save()
@@ -243,7 +226,6 @@ class ProfileEdit(View):
                 request.user.save()
                 request.user.is_authenticated = False    
                 self.template = "registration/password_change_done.html"
-
                   
         context = {
             'user_form' : user_form,
@@ -252,4 +234,3 @@ class ProfileEdit(View):
         }
 
         return render(request, self.template, context)
-

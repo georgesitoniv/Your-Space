@@ -1,0 +1,116 @@
+    <tr>
+        <td>
+            <form  method="POST">
+                {% csrf_token %}
+                {% if not has_liked %}
+                    <button type="submit" id="like" name="like_button" class="btn btn-primary btn-circle-md" >
+                        <i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>
+                    </button>
+                {% else %}
+                    <button type="submit" name="unlike_button" class="btn btn-primary btn-circle-md" >
+                        <i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>                                          
+                    </button>
+                {% endif %}
+                {% if post.likes.count != 0 %}
+                    {{post.likes.count}}
+                {% endif %}                   
+            </form>               
+        </td>
+        <td>
+            <div class="active">
+                <a class="btn btn-success btn-circle-md" data-toggle="tab" href="#comments">
+                    <i class="fa fa-comments fa-lg" aria-hidden="true"></i>
+                </a>
+                 {% if comments %}
+                    {{comments.count}}
+                {% endif %}
+            </div>
+            
+        </td>
+        <td>
+            <div class="active">
+                <a class="btn btn-danger btn-circle-md" data-toggle="tab" href="#create-comment">
+                    <i class="fa fa-commenting fa-lg" aria-hidden="true"></i>
+                </a>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <div class="tab-content">
+                <div id="comments" class="tab-pane fade in active" style="top:-20px;">
+                    <table class="table-comment table" style="text-align:left;">
+                        {% if comments.count != 0 %}
+                            {% for comment in comments %}      
+                                <tr>
+                                    <td>
+                                        {% if comment.user.profile.photo %}
+                                            <div class="post-user-image">
+                                                <a href="{% url 'account:profile' username=comment.user.username%}">
+                                                    <img  src="{{ comment.user.profile.photo.url }}">
+                                                </a>
+                                            </div>
+                                        {% else %}
+                                            <div class="post-user-image">
+                                                <a href="{% url 'account:profile' username=comment.user.username%}">      
+                                                    <span class="no-image glyphicon glyphicon-user"></span>     
+                                                </a>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if comment.user.first_name and comment.user.last_name %}
+                                            {{comment.user.first_name}} {{comment.user.last_name}}
+                                        {% else %}
+                                            {{comment.user.username}}
+                                        {% endif %}
+                                        </td>
+                                        <td  class="wrapword">{{ comment.content }}</td>
+                                        {% if comments == request.user %}
+                                        <td>
+                                            <form method="POST">
+                                                {% csrf_token %}
+
+                                                <button type="submit" id="delete_comment" name="delete_comment_button" class="btn btn-danger" >
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                                
+                                            </form>
+                                        </td>
+                                        {% endif %}
+                                    </tr>
+                                    <tr>
+                                
+                                    </tr>
+                                {% endfor%}
+                            {% else %}
+                                This post has no comments
+                            {% endif %}
+                        </table>  
+                </div>
+
+                <div id="create-comment" class="tab-pane fade">                      
+                    <form method="POST">
+                        <table class="table-comment table" style="width:100%;">
+                            <tr>                                   
+                                {% csrf_token %}
+                                <td>       
+                                    Comment:
+                                </td>
+                                <td>
+                                    {{comment_form.content}}
+                                </td>
+                                    
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button type="submit" name="comment_button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-check"></span>Comment
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>              
+                </div>
+            </div>
+        </td>
+    </tr>
