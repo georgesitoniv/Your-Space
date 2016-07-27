@@ -15,7 +15,6 @@
       <div class="panel-body">
         
         <form class="form-horizontal" action="."  method = "POST" role="form" style = "text-align:left;">
-
           {% csrf_token %}
           {% for field in user_form %}
             <div class="form-group">
@@ -30,8 +29,9 @@
             </div>
 
             {% if field.errors %}
-              <div style="color:red;text-align:center;">
-                {{field.errors.as_text}}
+              <div style="text-align:center;" class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {{ field.errors}}
               </div>
             {% endif %}
           {% endfor %}

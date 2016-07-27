@@ -123,6 +123,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 AUTHENTICATION_BACKENDS  = {
     'django.contrib.auth.backends.ModelBackend',
     'social.backends.facebook.Facebook2OAuth2',
+    'account.authentication.EmailAuthBackend',
 }
 
 #Log In

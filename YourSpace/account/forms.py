@@ -7,7 +7,7 @@ class LogInForm(forms.Form):
     """
         Form for logging in
     """
-    username = forms.CharField(max_length = 20)
+    username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
 
 class UserRegistrationForm(forms.ModelForm):
@@ -20,16 +20,37 @@ class UserRegistrationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'first_name','last_name','email')
+        
     
     def clean_username(self):
         cd = self.cleaned_data
-        for char in cd['username']:
-            print(char)
-            if char == " ":
-                raise forms.ValidationError("Please dont use spaces")
+        if not cd['username'].isalnum():
+            raise forms.ValidationError("Please use alpanumeric characters only")
         return cd['username']
-    
 
+    def clean_first_name(self):
+        cd = self.cleaned_data
+        if cd['first_name'] != "":
+            if not cd['first_name'].isalnum():
+                raise forms.ValidationError("Please use alpanumeric characters only")
+        return cd['first_name']
+
+    def clean_last_name(self):
+        cd = self.cleaned_data
+        if cd['last_name'] != "":
+            if not cd['last_name'].isalnum():
+                raise forms.ValidationError("Please use alpanumeric characters only")
+        return cd['last_name']
+    
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not email:
+            raise forms.ValidationError("Email is required")
+        elif User.objects.filter(email=email):
+            raise forms.ValidationError("Email is already used.")    
+        else:
+            pass
+        return email
 
     def clean_password_validate(self):
         cd = self.cleaned_data
@@ -57,7 +78,6 @@ class PasswordChangeForm(forms.Form):
         return cd['validate_new_password']
 
 class UserEditForm(forms.ModelForm):
-
     """
         Form that will enable the user to edit his information
     """
@@ -66,9 +86,7 @@ class UserEditForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name', 'email')
 
-
 class ProfileEditForm(forms.ModelForm):
-
     """
         Form that will enable the user to edit his profile
     """

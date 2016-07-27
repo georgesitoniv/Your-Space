@@ -15,14 +15,15 @@ class Post(models.Model):
     def __str__(self):
         return "Post by {}".format(self.user.username)
 
-    def has_liked(self, user):
-               
+    def has_liked(self, user):             
         if self.likes.filter(id=user.id).exists():
             liked = True
         else:
             liked = False
         
         return liked
+
+        
 
 class PostComments(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

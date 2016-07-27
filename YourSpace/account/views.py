@@ -211,11 +211,14 @@ class ProfileEdit(View):
         profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
         password_form = PasswordChangeForm()
         
-        if "account_update_button" in request.POST:        
+        if "account_update_button" in request.POST:    
             if user_form.is_valid() and profile_form.is_valid():
-                user_form.save()
-                profile_form.save()
-                messages.success(request, 'Account information updated successfully')
+                if request.user.profile.email_validate(user_form.cleaned_data['email']):
+                    user_form.save()
+                    profile_form.save()
+                    messages.success(request, 'Account information updated successfully')
+                else:
+                    messages.error(request, 'Email already used.')
             else:
                 messages.error(request, 'Error in updating your account info')
         if "password_update_button" in request.POST:
