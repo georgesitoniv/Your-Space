@@ -22,10 +22,9 @@ class Profile(models.Model):
         return follows
     
     def email_validate(self, email):
-        try:
-            users = User.objects.filter(email=email).exclude(username=self.user.username)
+        if User.objects.filter(email=email).exclude(username=self.user.username) and email:
             return False
-        except User.DoesNotExist:
+        else:
             return True
     
 

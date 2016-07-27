@@ -58,6 +58,13 @@
                       </div>
                     </div>
                   </div>
+
+                  {% if field.errors %}
+                    <div class="alert alert-danger">
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                      {{field.errors.as_text}}
+                    </div>
+                  {% endif %}
                 {% endfor %}
 
                 <div class="form-group">
@@ -90,19 +97,8 @@
                       <br><br>
                       {{profile_form.description}}                      
                     </div>                     
-
                   </div>
 
-                 
-
-
- 
-                {% if field.errors %}
-                  <div class="alert alert-danger">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    {{field.errors.as_text}}
-                  </div>
-                {% endif %}
 
                 <br>
                 <div class="form-group">

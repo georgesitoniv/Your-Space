@@ -86,6 +86,20 @@ class UserEditForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name', 'email')
 
+    def clean_first_name(self):
+        cd = self.cleaned_data
+        if cd['first_name'] != "":
+            if not cd['first_name'].isalnum():
+                raise forms.ValidationError("Please use alpanumeric characters only")
+        return cd['first_name']
+
+    def clean_last_name(self):
+        cd = self.cleaned_data
+        if cd['last_name'] != "":
+            if not cd['last_name'].isalnum():
+                raise forms.ValidationError("Please use alpanumeric characters only")
+        return cd['last_name']
+
 class ProfileEditForm(forms.ModelForm):
     """
         Form that will enable the user to edit his profile
