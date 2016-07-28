@@ -10,18 +10,15 @@ from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
 from braces.views import AnonymousRequiredMixin
-
 from .forms import LogInForm, UserRegistrationForm, UserEditForm, ProfileEditForm, PasswordChangeForm
 from .models import Profile
 from post.models import Post
 
 
 class LogIn(AnonymousRequiredMixin, View):
-
     """
         Log in view. Uses anonymous required mixin to prevent the user to access this view when logged in
-    """
-    
+    """ 
     template = "registration/login.html"
 
     def get(self, request):
@@ -42,15 +39,17 @@ class LogIn(AnonymousRequiredMixin, View):
                 if user.is_active:
 
                     login(request, user)
-                    
+                    return HttpResponseRedirect(reverse_lazy("account:timeline"))
                 else:
                     message.error(request,"Account Disabled")
+            else:
+                messages.error(request, "Invalid Username or Password")
 
         context = {
             'form': form
         }
 
-        return HttpResponseRedirect(reverse_lazy("account:timeline"))
+        return render(request, self.template, context)
 
 @login_required
 def timeline(request, template="account/timeline.html", page_template="post/post.html"):
@@ -58,17 +57,14 @@ def timeline(request, template="account/timeline.html", page_template="post/post
         Timeline view. Contains post by followed users
     """   
     post = Post.objects.filter(user__in = request.user.profile.get_timeline_users()).order_by("-date_updated")
-
     context = {
         'posts' : post,
         'page_template':page_template,        
     }
-
     if request.is_ajax():
         template = page_template
 
     return render(request, template, context)
-    
 
 @login_required
 def timeline_paginated(request):
@@ -108,7 +104,6 @@ def timeline_paginated(request):
     }
 
     return render(request, 'account/timeline.html', context)
-
 
 @login_required
 def profile(request, username='test'):
@@ -151,9 +146,6 @@ def profile(request, username='test'):
 
     return render(request, 'account/profile.html', context)
 
-     
-
-
 def user_list(request):
     """
          A view that displays all users
@@ -165,7 +157,6 @@ def user_list(request):
     }
 
     return render(request, 'account/user_list.html', context)
-    
 
 class RegisterForm(View):
     """
@@ -190,16 +181,13 @@ class RegisterForm(View):
             profile = Profile.objects.create(user=new_user)
             messages.success(request, "You have successfully registered")
             user_form = UserRegistrationForm()
-
+        else:
+            messages.error(request, "Please review the field errors, make sure each field contains valid characters and please do not add trailing whitespaces")    
         context = {
             'user_form': user_form,
         }
 
         return render(request, self.template, context)
-
-
-
-
 
 class ProfileEdit(View):
     """
@@ -209,7 +197,6 @@ class ProfileEdit(View):
     template = 'account/edit_profile.html'
 
     def get(self, request):
-
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
         password_form = PasswordChangeForm()
@@ -217,23 +204,26 @@ class ProfileEdit(View):
             'user_form' : user_form,
             'profile_form' : profile_form,
             'password_form':password_form,
-        }
-        
-       
+        }  
         return render(request, self.template, context)
 
-    def post(self, request):
-        user_form = UserEditForm(instance=request.user, data=request.POST)
-        profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
-        password_form = PasswordChangeForm()
-        if "account_update_button" in request.POST:        
+    def post(self, request):   
+        if "account_update_button" in request.POST:
+            user_form = UserEditForm(instance=request.user, data=request.POST)
+            profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
+            password_form = PasswordChangeForm()      
             if user_form.is_valid() and profile_form.is_valid():
-                user_form.save()
-                profile_form.save()
-                messages.success(request, 'Account information updated successfully')
+                if request.user.profile.email_validate(user_form.cleaned_data['email']):
+                    user_form.save()
+                    profile_form.save()
+                    messages.success(request, 'Account information updated successfully')
+                else:
+                    messages.error(request, 'Email already used.')
             else:
-                messages.error(request, 'Error in updating your account info')
-        if "password_update_button" in request.POST:
+                messages.error(request, "Please make sure each field contains valid characters and please do not add trailing whitespaces")
+        elif "password_update_button" in request.POST:                          
+            user_form = UserEditForm(instance=request.user)
+            profile_form = ProfileEditForm(instance=request.user.profile)
             password_form = PasswordChangeForm(data=request.POST)
             if password_form.is_valid():
                 cd = password_form.cleaned_data
@@ -241,7 +231,11 @@ class ProfileEdit(View):
                 request.user.save()
                 request.user.is_authenticated = False    
                 self.template = "registration/password_change_done.html"
+            else:
+                messages.error(request, "Please make sure each field contains valid characters and please do not add trailing whitespaces")
+        
 
+        
                   
         context = {
             'user_form' : user_form,
@@ -250,4 +244,3 @@ class ProfileEdit(View):
         }
 
         return render(request, self.template, context)
-

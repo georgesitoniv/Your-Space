@@ -4,127 +4,138 @@
 
 {% block content %}
 
-  <div class = "container" style="padding-left:20%;padding-right:20%;">
+  <div class = "container  panel-profile">
 
           <div class="panel panel-default"  style=" text-align:center; margin-top:px">
             <br>
             <div class="panel-body" >
-            
-             <div class="form-group">
-               <div class="row">
-                 <div class="col-sm-offset-4 col-sm-4">
+
+              <table class="table table-fixed">
+                <tbody>
+                <tr >
+                  <td rowspan="2">
                     {% if user.profile.photo %}
-                      <div class="profile-photo">
-                        <a data-toggle="modal" href="#" data-target="#modal-profile-{{user.id}}">
-                          <img class="user-image"  src="{{ user.profile.photo.url }}"/>
-                        </a>
-                        {% include 'post/image_modal.html' %}
-                      </div>
-                    {% else %}
-                      <div class="profile-photo">      
-                        <span class="no-image glyphicon glyphicon-user">
-                        </span>
-                     
-                      </div>
-                    {% endif %}
-                   
-                 </div>
-               </div>
-             </div>
-
-             <div class="panel-heading">
-              {% if user.first_name and user.last_name %}
-                {{user.first_name}} {{user.last_name}}
-              {% else %}
-                {{ user.username }}
-              {% endif %}
-            </div>
-            <br>
-
-            <table class="table table-striped" style="text-align:center;width:100%;">
-              <tbody>
-
-                <tr>
-                  <td> Birthday: </td>
-                  <td>
+                        <div class="profile-photo">
+                          <a data-toggle="modal" href="#" data-target="#modal-profile-{{user.id}}">
+                            <img class="user-image"  src="{{ user.profile.photo.url }}"/>
+                          </a>
+                          {% include 'post/image_modal.html' %}
+                        </div>
+                      {% else %}
+                        <div class="profile-photo">      
+                          <span class="no-image glyphicon glyphicon-user">
+                          </span>                
+                        </div>
+                      {% endif %}
+                  </td>
+                  <td colspan="3">
+                    Birthday:  
                     {% if user.profile.date_of_birth %}
-                       {{user.profile.date_of_birth}}
+                      {{user.profile.date_of_birth}}
                     {% else %}
-                        {% if user.username != request.user.username %}
-                          User's birthday has not been edited
-                        {% else %}
-                          Please edit your birthday
-                        {% endif %}
+                      {% if user.username != request.user.username %}
+                        User's birthday has not been edited
+                      {% else %}
+                        Please edit your birthday
+                      {% endif %}
                     {% endif %}
                   </td>
                 </tr>
                 <tr>
-                  <td> Description: </td>
+                  <td colspan="3" style="padding-left:40px;">
+                      {% if user.profile.description %}
+                        {{user.profile.description}}
+                      {% else %}
+                          {% if user.username != request.user.username %}
+                            User's description has not been edited
+                          {% else %}
+                            Please edit your description
+                          {% endif %}
+                      {% endif %}
+                  </td>
+                </tr>
+                <tr >
                   <td>
-                    {% if user.profile.description %}
-                       {{user.profile.description}}
-                    {% else %}
-                        {% if user.username != request.user.username %}
-                          User's description has not been edited
-                        {% else %}
-                          Please edit your description
-                        {% endif %}
+                    <div style="font-size:1.3em;">
+                      {% if user.first_name and user.last_name %}
+                        {{user.first_name}} {{user.last_name}}
+                      {% else %}
+                        {{ user.username }}
+                      {% endif %}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="active profile-icons">
+                      <a data-toggle="tab" href="#post">
+                        <i class="fa fa-sticky-note-o fa-3x" aria-hidden="true"></i><br>
+                      </a>
+                      {{post_count}}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="profile-icons">
+                      <a data-toggle="tab" href="#followers">
+                        <i class="fa fa-users fa-3x" aria-hidden="true"></i><br>
+                      </a>
+                      {{user.profile.followers.count }}
+                    </div>    
+                  </td>
+                  <td>
+                  <div class="profile-icons">
+                    <a data-toggle="tab" href="#followed">
+                      <i class="fa fa-eye fa-3x" aria-hidden="true"></i><br>
+                    </a>
+                    {{user.profile.follow.count }}
+                    </div> 
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4">
+                    {% if user.username != request.user.username %}
+                      <form class="form-horizontal" action="." method = "POST" role="form" style = "text-align:center">
+                          {% csrf_token %}
+                          <div class="row">
+                              <div class="col-sm-offset-4 col-sm-4">
+                                  {% if follows %}
+                                    <button type="submit" name="unfollow_button" class="btn btn-warning">
+                                      <span class="glyphicon glyphicon-eye-close"></span>
+                                      Unfollow
+                                      </button>
+                                  {% else %}                            
+                                    <button type="submit" name="follow_button"  class="btn btn-success">
+                                      <span class="glyphicon glyphicon-eye-open"></span>
+                                      Follow
+                                    </button>
+                                  {% endif %}
+                              </div>
+                          </div>
+
+                        </form>
                     {% endif %}
                   </td>
                 </tr>
   
-              </tbody>
-            </table>
-
-            {% if user.username != request.user.username %}
-              <form class="form-horizontal" action="." method = "POST" role="form" style = "text-align:center">
-                  {% csrf_token %}
-                  <div class="row">
-                      <div class="col-sm-offset-4 col-sm-4">
-                          {% if follows %}
-                             <button type="submit" name="unfollow_button" class="btn btn-warning">
-                               <span class="glyphicon glyphicon-eye-close"></span>
-                               Unfollow
-                              </button>
-                          {% else %}                            
-                            <button type="submit" name="follow_button"  class="btn btn-success">
-                              <span class="glyphicon glyphicon-eye-open"></span>
-                              Follow
-                            </button>
-                          {% endif %}
-                      </div>
-                  </div>
-
-                </form>
-            {% endif %}
+    
+                </tbody>
+              </table>
               
-            <br>
+
+
           </div>
         </div>
 
-    <ul class="nav nav-tabs nav-justified">
-      
-      <li class="active"><a data-toggle="tab" href="#post">Posts</a></li>
-      <li><a data-toggle="tab" href="#followers">Followers</a></li>
-      <li><a data-toggle="tab" href="#followed">Followed</a></li>
-    </ul>
+
 
     <div class="tab-content">
-      
-
 
       <div id="post" class="tab-pane fade in active">
- 
-            
           <div class="panel panel-default">
-            <br>
             <div class="panel-body" style="margin:auto;text-align:center;">
-
-
 
                 {% if request.user.username = user.username %}
                   <a class="btn btn-primary" style="float:right;" href="{% url 'post:create_post' %}">
-                    <span class="glyphicon glyphicon-pencil"></span>Create a Post
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    Create a Post
                   </a>
                   <br><br>
                 {% endif %}
@@ -138,7 +149,7 @@
                     {% if request.user.username == user.username %}
                       You havent made a post.<br>
                     {% else %}
-                      User have not made a post.
+                      User has not made a post.
                     {% endif %}
                   {% endif %}
 
@@ -166,34 +177,48 @@
         
       </div>
 
-       <div id="followers" class="tab-pane fade">
+       <div name="followers" id="followers" class="tab-pane fade">
      
           <div class="panel panel-default" >
             <br>
-            <div class="panel-body" style="text-align:center;max-height:600px;overflow-x:hidden;">
+            <div class="panel-body profile-subpanel">
 
-            Followers: {{user.profile.followers.count}}
+            <div class="profile-subheadings">Followers</div>
             <br><br>
             {% if user.profile.followers.count != 0 %}
            <table class="table" style="text-align:center;width:100%;">
 
             <tbody>
-              
-                
                   {% for follower in user.profile.followers.all %}
-                      <tr>
-                          <td>
-                              
-                              <a href="{% url 'account:profile' username=follower.user.username %}">
-                                  {% if follower.user.first_name and follower.user.last_name %}
-                                      {{follower.user.first_name}} {{follower.user.last_name}}
-                                  {% else %}
-                                      {{ follower.user.username }}
-                                  {% endif %}
-                              </a>
-                          </td>
-                      </tr>
-                  {% endfor %}
+                    <tr>
+                        <td style="text-align:center" rowspan="2">
+                        {% if follower.photo %}
+                            <div class="post-user-image">
+                                <a href="{% url 'account:profile' username=follower.user.username%}">
+                                    <img  src="{{ follower.photo.url }}">
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="post-user-image">
+                                <a href="{% url 'account:profile' username=follower.user.username%}">      
+                                <span class="no-image glyphicon glyphicon-user"></span>     
+                                </a>
+                            </div>
+                        {% endif %}
+                        </td>
+                        <td>
+                            {% if follower.user.first_name and follower.user.last_name %}
+                                {{follower.user.first_name}} {{follower.user.last_name}}
+                            {% else %}
+                                {{follower.user.username }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Followers: {{ follower.followers.count }}</td>
+                    </tr>
+                {% endfor %}
+                  
    
 
 
@@ -218,29 +243,42 @@
      
           <div class="panel panel-default" >
             <br>
-            <div class="panel-body" style="text-align:center;max-height:600px;overflow-x:hidden;">
+            <div class="panel-body profile-subpanel">
 
-            Followed Users: {{ user.profile.follow.count }}
+            <div class="profile-subheadings">Followed Users</div>
             <br><br>
             {% if user.profile.follow.count != 0 %}
            <table class="table" style="text-align:center;width:100%;">
 
             <tbody>
-              
-                
-                  {% for follower in user.profile.follow.all %}
-                      <tr>
-                          <td>
-                              
-                              <a href="{% url 'account:profile' username=follower.user.username %}">
-                                  {% if follower.user.first_name and follower.user.last_name %}
-                                      {{follower.user.first_name}} {{follower.user.last_name}}
-                                  {% else %}
-                                      {{ follower.user.username }}
-                                  {% endif %}
-                              </a>
-                          </td>
-                      </tr>
+                  {% for followed in user.profile.follow.all %}
+                    <tr>
+                        <td style="text-align:center" rowspan="2">
+                        {% if followed.photo %}
+                            <div class="post-user-image">
+                                <a href="{% url 'account:profile' username=followed.user.username%}">
+                                    <img  src="{{ followed.photo.url }}">
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="post-user-image">
+                                <a href="{% url 'account:profile' username=followed.user.username%}">      
+                                <span class="no-image glyphicon glyphicon-user"></span>     
+                                </a>
+                            </div>
+                        {% endif %}
+                        </td>
+                        <td>
+                            {% if followed.user.first_name and followed.user.last_name %}
+                                {{followed.user.first_name}} {{followed.user.last_name}}
+                            {% else %}
+                                {{followed.user.username }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Followers: {{ followed.followers.count }}</td>
+                    </tr>
                   {% endfor %}
    
 

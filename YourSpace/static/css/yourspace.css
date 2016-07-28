@@ -3,33 +3,71 @@ body{
     font-family: 'Quicksand', sans-serif;
     background-color: rgb(220,220,220);
 }
+.table-fixed{
+    table-layout: fixed;
+    width:100%;
+}
+.table-no-border td, .table-no-border td{
+    border-top: none !important;
+}
+.table-comment th, .table-comment td{
+    border-top: none !important;
+    border-bottom: 1px solid #ddd;
+}
 .navbar-custom{
     font-size:15px;
 }
 .panel-heading{
-    font-size: 1.5em;
+    font-size: 1.6em;
+    text-align: center;
 }
-.panel-profile{
-    border-radius: 20px 20px 0 0;
+.timeline{
+    max-width: 680px;
 }
 
+.panel-form{
+    max-width: 550px;
+    margin: auto;
+}
+.panel-profile{
+    max-width:700px;
+    margin: auto;
+}
 
 
 .profile-photo{
     left: 0;
     right: 0;
-}
-
-.profile-photo .user-image{
     width: 150px;
     height: 150px;
+    overflow: hidden;
     border-radius: 100px;
     border: 5px solid rgba(200, 200, 200, 0.8);
 }
-.profile-photo .no-image{
-    font-size: 100px;
+
+.profile-photo .user-image{
+    width: 100%;
+    height: 100%; 
 }
 
+.profile-photo .no-image{
+    font-size: 140px;
+}
+.profile-icons a{
+    color:black;
+}
+.profile-subheadings{
+    font-size: 1.2em;
+    text-align: center;
+}
+.profile-subpanels{
+    text-align:center;
+    max-height:700px;
+    overflow-x:hidden;
+}
+.profile-icons a:hover{
+    color:rgb(60, 60, 60);
+}
 
 .modal-dialog {
     width:inherit;
@@ -71,6 +109,26 @@ body{
   line-height: 1.428571429;
   border-radius: 20px;
 }
+
+.btn-circle-md {
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  padding: 3px 13px;
+  font-size: 15px;
+  line-height: 2.428571429;
+  border-radius: 40px;
+}
+
+.btn-circle-lg {
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  padding: 5px 21px;
+  font-size: 15px;
+  line-height: 2.428571429;
+  border-radius: 40px;
+}
 .post{
     margin: 20px auto;
     text-align:center;
@@ -105,10 +163,19 @@ body{
 .post-next{
     position:fixed;
     top:40%;
-    right:10%;
+    right:5%;
 }
 .post-previous{
     position:fixed;
     top:40%;
 }
-
+.wrapword{
+    white-space: -moz-pre-wrap !important;  
+    white-space: -webkit-pre-wrap; 
+    white-space: -pre-wrap;      
+    white-space: -o-pre-wrap;    
+    white-space: pre-wrap;       
+    word-wrap: break-word;       
+    word-break: break-all;
+    white-space: normal;
+}

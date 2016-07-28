@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-
+from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
@@ -20,8 +20,13 @@ class Profile(models.Model):
             follows = False
 
         return follows
-
-
+    
+    def email_validate(self, email):
+        if User.objects.filter(email=email).exclude(username=self.user.username) and email:
+            return False
+        else:
+            return True
+    
 
     def is_using_social_auth(self):
         providers = ["facebook", "google", "twitter"]

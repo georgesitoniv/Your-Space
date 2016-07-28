@@ -7,15 +7,14 @@
 {% block content %}
 
 
-  <div class = "container" style="padding-left:30%;padding-right:30%;">
+  <div class = "container">
 
 
-    <div class="panel panel-default">
+    <div class="panel panel-default panel-form">
       <div class="panel-heading" style="text-align:center">Register</div>
       <div class="panel-body">
         
         <form class="form-horizontal" action="."  method = "POST" role="form" style = "text-align:left;">
-
           {% csrf_token %}
           {% for field in user_form %}
             <div class="form-group">
@@ -30,9 +29,9 @@
             </div>
 
             {% if field.errors %}
-              <div class="alert alert-danger">
+              <div style="text-align:center;" class="alert alert-danger">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                {{field.errors.as_text}}
+                {{ field.errors.as_text}}
               </div>
             {% endif %}
           {% endfor %}
@@ -42,11 +41,13 @@
          <br>
          <div class="form-group">
            <div class="col-sm-offset-5 col-sm-5">
-             <button type="submit" class="btn btn-default">Sign Up</button>
+             <button type="submit" class="btn btn-success "><i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i> Sign Up</button>
            </div>
           </div>
         </form>
-         <a href="{% url 'account:login' %}">Back</a>
+        <a class="btn btn-info btn-circle-md" style="color:white;" href="{% url 'account:login' %}">
+          <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>
+        </a>
       </div>
     </div>
 

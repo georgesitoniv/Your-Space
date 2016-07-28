@@ -1,44 +1,26 @@
-
-
-
-
-
-
-<div id="post-{{post.id}}" class="panel panel-default post">
-
-                    
-    <div class="panel-body">
-        {% if not view %}
-        <div class="btn-group" role="group"  style="float:right;">                          
-            {% if request.user.username == post.user.username %}
-        
-          
-            <a  class="btn btn-info" style="color:white;" href="{% url 'post:edit_post' id=post.id %}">
-                <span class="glyphicon glyphicon-edit">         
-                </span>
-                Edit
-            </a>
-    
-            {% endif %}
-        
-            <a  class="btn btn-info" style="color:white;" href="{% url 'post:post_instance' id=post.id %}">
-                <span class="glyphicon glyphicon-info-sign">         
-                </span>
-                View
-            </a>
-            
-        </div>
+<div id="post-{{post.id}}" class="panel panel-default post">                    
+    <div class="panel-body">    
+        {% if not view %} 
+            <div  style="float:right;">
+                {% if request.user.username == post.user.username %}          
+                <a class="btn btn-danger btn-circle-md" style="color:white;" href="{% url 'post:edit_post' id=post.id %}">
+                    <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> 
+                </a>       
+                {% endif %}          
+                <a class="btn btn-info btn-circle-md" style="color:white;" href="{% url 'post:post_instance' id=post.id %}">
+                    <i class="fa fa-expand fa-lg" aria-hidden="true"></i>
+                </a>
+                
+            </div>
         {% endif %}
-        
-        
-            
+     
         <table style="text-align:left;">
             <tr>
                 <td rowspan="2">
                     {% if post.user.profile.photo %}
                     <div class="post-user-image">
                         <a href="{% url 'account:profile' username=post.user.username%}">
-                            <img  src="{{ post.user.profile.photo.url }}">
+                            <img class="user-image" src="{{ post.user.profile.photo.url }}">
                          </a>
                    </div>
                    {% else %}
@@ -63,12 +45,10 @@
         </table>
 
         <br>
-        <table class="table" style="width:100%;height:100%">
+        <table class="table table-fixed" stle="twidth:100%;height:100%">
             <tbody>
                 <tr>
-                    <td>
-                                
-          
+                    <td colspan="3">         
                         <br>
                         {% if post.content %}
                             <div style="text-align: left;">
@@ -81,20 +61,26 @@
                                 <img style="max-width:100%;max-height:250px;width:auto;height:auto;" src="{{ post.image.url }}">
                             </a>
                             {% include 'post/image_modal.html' %}
-                        {% endif %}
-                  
-                  
+                        {% endif %}             
                     </td>
-
-                 </tr>
-
-
+                </tr>              
+                {% if view %}
+                    {% include 'post/post_extension.html' %}
+                {% else %}
+                    <tr>
+                        <td style="text-align:left">                           
+                              <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
+                            {{post.likes.count}}
+                        </td>
+                        <td style="text-align:left">                           
+                              <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i>
+                            {{post.postcomments_set.count}}
+                        </td>
+                        <td></td>
+                    </tr>
+                {% endif %}
+                
             </tbody>
-        </table>
-  
-
-             
-                    
+        </table>                               
     </div>
-
 </div>
