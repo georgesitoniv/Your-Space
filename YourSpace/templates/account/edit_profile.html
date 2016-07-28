@@ -17,16 +17,24 @@
                    
                   <table class="table table-fixed table-no-border" style="text-align:center;">
                     <tr>
-                      <td colspan="2" style="padding-left:40%;">
-                        {% if user.profile.photo %}
-                          <div class="profile-photo">
+                      <td colspan="2">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                          <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                            {% if user.profile.photo %}
                               <img class="user-image"  src="{{ user.profile.photo.url }}"/>        
+                            {% else %}
+                               
+                                <span style="font-size:130px;" class="glyphicon glyphicon-user">
+                                </span>                
+
+                            {% endif %}
                           </div>
-                        {% else %}
-                          <div class="profile-photo">      
-                            <span class="no-image glyphicon glyphicon-user"></span>
+                          <div>
+                            <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span>
+                            <span class="fileinput-exists">Change</span><input id="id_photo" name="photo" type="file"></span>
+                            <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
                           </div>
-                        {% endif %}
+                        </div>
                       </td>
                     </tr>
                     {% for field in user_form %}
@@ -55,14 +63,6 @@
                       </td>
                       <td>
                         <input id="id_date_of_birth" name="date_of_birth" type="date">                       
-                      </td>                    
-                    </tr>
-                    <tr>
-                      <td>
-                        {{profile_form.photo.label}}:                          
-                      </td> 
-                      <td>
-                     	  {{profile_form.photo}}
                       </td>                    
                     </tr>
                     <tr>

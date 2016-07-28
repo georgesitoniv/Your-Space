@@ -6,7 +6,7 @@
 
   <div class = "container  panel-profile">
 
-          <div class="panel panel-default"  style=" text-align:center; margin-top:px">
+          <div class="panel panel-default"  style="background-color:rgb(180, 180, 180);color:white;text-align:center; margin-top:px">
             <br>
             <div class="panel-body" >
 
@@ -88,39 +88,30 @@
                     {{user.profile.follow.count }}
                     </div> 
                   </td>
-                </tr>
-                <tr>
-                  <td colspan="4">
-                    {% if user.username != request.user.username %}
-                      <form class="form-horizontal" action="." method = "POST" role="form" style = "text-align:center">
-                          {% csrf_token %}
-                          <div class="row">
-                              <div class="col-sm-offset-4 col-sm-4">
-                                  {% if follows %}
-                                    <button type="submit" name="unfollow_button" class="btn btn-warning">
-                                      <span class="glyphicon glyphicon-eye-close"></span>
-                                      Unfollow
-                                      </button>
-                                  {% else %}                            
-                                    <button type="submit" name="follow_button"  class="btn btn-success">
-                                      <span class="glyphicon glyphicon-eye-open"></span>
-                                      Follow
-                                    </button>
-                                  {% endif %}
-                              </div>
-                          </div>
-
-                        </form>
-                    {% endif %}
-                  </td>
-                </tr>
-  
+                </tr>  
     
                 </tbody>
               </table>
-              
-
-
+              {% if user.username != request.user.username %}
+                <form class="form-horizontal" action="." method = "POST" role="form" style = "text-align:center">
+                  {% csrf_token %}
+                    <div class="row">
+                      <div class="col-sm-offset-4 col-sm-4">
+                        {% if follows %}
+                          <button type="submit" name="unfollow_button" class="btn btn-warning">
+                            <span class="glyphicon glyphicon-eye-close"></span>
+                            Unfollow
+                          </button>
+                        {% else %}                            
+                          <button type="submit" name="follow_button"  class="btn btn-success">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                            Follow
+                          </button>
+                        {% endif %}
+                      </div>
+                    </div>
+                </form>
+                {% endif %}
           </div>
         </div>
 
@@ -129,8 +120,6 @@
     <div class="tab-content">
 
       <div id="post" class="tab-pane fade in active">
-          <div class="panel panel-default">
-            <div class="panel-body" style="margin:auto;text-align:center;">
 
                 {% if request.user.username = user.username %}
                   <a class="btn btn-primary" style="float:right;" href="{% url 'post:create_post' %}">
@@ -146,11 +135,17 @@
                       {% include 'post/post.html' %}
                     {% endfor %}
                   {% else %}
-                    {% if request.user.username == user.username %}
-                      You havent made a post.<br>
-                    {% else %}
-                      User has not made a post.
-                    {% endif %}
+                    <div class="panel panel-default" >
+                      <div class="panel-body profile-subpanel">
+                        <br>
+                        {% if request.user.username == user.username %}
+                          You havent made a post.<br>
+                        {% else %}
+                          User has not made a post.
+                        {% endif %}
+                        <br>
+                      </div>
+                    </div>
                   {% endif %}
 
                   {% if posts.paginator.num_pages > 1 %}
@@ -171,9 +166,7 @@
                 {% endif %}
 
                  <br>          
-            
-          </div>
-        </div>
+    
         
       </div>
 

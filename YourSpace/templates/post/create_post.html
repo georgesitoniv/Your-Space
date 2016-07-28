@@ -8,8 +8,6 @@
 
 
   <div class = "container">
-
-
     <div class="panel panel-default panel-form">
       <div class="panel-heading" style="text-align:center">{{ page_title }}</div>
       <div class="panel-body">
@@ -22,34 +20,37 @@
               </button> 
             </div>
           {% endif %}
-          <br><br>
-          {% if post.image %}
-            <div class="form-group">
-              <div class="row">
-                <div class="col-sm-offset-4 col-sm-4">
-                    <img style="max-width:100%;max-height:250px;width:auto;height:auto;" src="{{ post.image.url }}">
-                </div>
-               </div>
-            </div>
-           {% endif %}
           {% csrf_token %}
-          {% for field in post_form.visible_fields %}
-            <div class="form-group">
-              <div class="row">
-                <div class="col-sm-offset-2 col-sm-4">
-                  {{field.label}}:
+            <div class="container-fluid">
+              <div class="row" style="text-align:center;">
+                <div class="col-sm-offset-3 col-sm-4">
+                  <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                      {% if post.image %}
+                        <img src="{{post.image.url}}">
+                      {% endif %}
+                    </div>
+                    <div>
+                      <span class="btn btn-default btn-file"><span class="fileinput-new"><i class="fa fa-upload fa-lg" aria-hidden="true"></i> Select Image</span>
+                      <span class="fileinput-exists">Change</span>
+                      <input id="id_image" name="image" type="file"></span>
+                      <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times" aria-hidden="true"></i> Remove</a>
+                    </div><br>
+                  </div>
                 </div>
-
+              </div>
+              <div class="row">
+                <div class="col-sm-offset-1 col-sm-6">
+                  {{post_form.content.label}}:
+                </div>
               </div>
               <br>
-              <div class="row">
-                <div class="col-sm-offset-2 col-sm-6">
-                  {{field}}
+              <div class="row" style="text-align:center;">
+                <div class="col-sm-12">
+                  <textarea cols="42" id="id_content" maxlength="600" name="content" rows="4" placeholder="Post Content" style="resize:none"></textarea>
                 </div>
               </div>
-
-            </div>
-            
+              
 
             {% if field.errors %}
               <div class="alert alert-danger">
@@ -57,24 +58,19 @@
                 {{field.errors.as_text}}
               </div>
             {% endif %}
-          {% endfor %}
-
-         
+            <br>
+            <div class="row">
+              <div class="col-sm-offset-5 col-sm-5">
+                <button type="submit" name="post_button" class="btn btn-success">
+                  <span class="glyphicon glyphicon-check"></span> Post
+                </button>
+              </div>
+            </div>
           
-         <br>
-         <div class="form-group">
-           <div class="col-sm-offset-5 col-sm-5">
-             <button type="submit" name="post_button" class="btn btn-success">
-               <span class="glyphicon glyphicon-check"></span> Post
-              </button>
-           </div>
           </div>
         </form>
-         <a href="{% url 'account:profile' username=request.user.username %}">Back</a>
-      </div>
     </div>
-
-
   </div>
+</div>
 
 {% endblock %}

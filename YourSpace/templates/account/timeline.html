@@ -56,7 +56,7 @@
         {% endfor %}
  
       {% else %}
-
+        <br>
         <div class="panel panel-default" style="text-align:center;mid-height:300px;height:auto; width:auto;">           
           <div class="panel-body">
             You have not followed anyone<br>
@@ -67,11 +67,6 @@
 
     </div>
 
-    {% if posts.paginator.num_pages > 1 %}
-      <span class="current">
-         <!-- Page {{ posts.number }} of {{ posts.paginator.num_pages }}.-->
-      </span>
-    {% endif %}
 
   </div>
 
