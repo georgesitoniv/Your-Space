@@ -181,7 +181,8 @@ class RegisterForm(View):
             profile = Profile.objects.create(user=new_user)
             messages.success(request, "You have successfully registered")
             user_form = UserRegistrationForm()
-
+        else:
+            messages.error(request, "Please review the field errors, make sure each field contains valid characters and please do not add trailing whitespaces")    
         context = {
             'user_form': user_form,
         }
@@ -206,12 +207,11 @@ class ProfileEdit(View):
         }  
         return render(request, self.template, context)
 
-    def post(self, request):
-        user_form = UserEditForm(instance=request.user, data=request.POST)
-        profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
-        password_form = PasswordChangeForm()
-        
-        if "account_update_button" in request.POST:    
+    def post(self, request):   
+        if "account_update_button" in request.POST:
+            user_form = UserEditForm(instance=request.user, data=request.POST)
+            profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
+            password_form = PasswordChangeForm()      
             if user_form.is_valid() and profile_form.is_valid():
                 if request.user.profile.email_validate(user_form.cleaned_data['email']):
                     user_form.save()
@@ -220,8 +220,10 @@ class ProfileEdit(View):
                 else:
                     messages.error(request, 'Email already used.')
             else:
-                messages.error(request, 'Error in updating your account info')
-        if "password_update_button" in request.POST:
+                messages.error(request, "Please make sure each field contains valid characters and please do not add trailing whitespaces")
+        elif "password_update_button" in request.POST:                          
+            user_form = UserEditForm(instance=request.user)
+            profile_form = ProfileEditForm(instance=request.user.profile)
             password_form = PasswordChangeForm(data=request.POST)
             if password_form.is_valid():
                 cd = password_form.cleaned_data
@@ -229,6 +231,11 @@ class ProfileEdit(View):
                 request.user.save()
                 request.user.is_authenticated = False    
                 self.template = "registration/password_change_done.html"
+            else:
+                messages.error(request, "Please make sure each field contains valid characters and please do not add trailing whitespaces")
+        
+
+        
                   
         context = {
             'user_form' : user_form,

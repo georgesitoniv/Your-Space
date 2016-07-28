@@ -7,6 +7,9 @@ body{
     table-layout: fixed;
     width:100%;
 }
+.table-no-border td, .table-no-border td{
+    border-top: none !important;
+}
 .table-comment th, .table-comment td{
     border-top: none !important;
     border-bottom: 1px solid #ddd;

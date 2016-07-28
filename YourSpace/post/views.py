@@ -104,11 +104,14 @@ def post_instance(request, id = '1'):
 
         elif "comment_button" in request.POST:
             comment_form = CommentForm(request.POST)
-            if comment_form.is_valid:
+            if comment_form.is_valid():
                 comment_form = comment_form.save(commit = False)
-                comment_form.user = request.user
-                comment_form.post = post
-                comment_form.save()
+                if comment_form.content:
+                    comment_form.user = request.user
+                    comment_form.post = post
+                    comment_form.save()
+                else:
+                    messages.error(request, "Please provide a comment")
             comment_form = CommentForm()
  
         else:

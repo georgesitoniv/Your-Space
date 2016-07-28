@@ -29,9 +29,3 @@ class CommentForm(forms.ModelForm):
                 'style':'resize:none'
                 }),
         }
-
-    def clean_content(self):
-        cd = self.cleaned_data
-        if cd['content'] is None:
-            raise forms.ValidationError("Please provide a comment")
-        return cd['content']     

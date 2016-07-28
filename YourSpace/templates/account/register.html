@@ -31,7 +31,7 @@
             {% if field.errors %}
               <div style="text-align:center;" class="alert alert-danger">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                {{ field.errors}}
+                {{ field.errors.as_text}}
               </div>
             {% endif %}
           {% endfor %}
@@ -45,7 +45,9 @@
            </div>
           </div>
         </form>
-         <a href="{% url 'account:login' %}">Back</a>
+        <a class="btn btn-info btn-circle-md" style="color:white;" href="{% url 'account:login' %}">
+          <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>
+        </a>
       </div>
     </div>
 
