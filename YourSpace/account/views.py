@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import View
@@ -51,20 +51,14 @@ class LogIn(AnonymousRequiredMixin, View):
 
         return render(request, self.template, context)
 
-@login_required
-def timeline(request, template="account/timeline.html", page_template="post/post.html"):
-    """
-        Timeline view. Contains post by followed users
-    """   
-    post = Post.objects.filter(user__in = request.user.profile.get_timeline_users()).order_by("-date_updated")
-    context = {
-        'posts' : post,
-        'page_template':page_template,        
-    }
-    if request.is_ajax():
-        template = page_template
+class LogOut(View):
 
-    return render(request, template, context)
+    def get(self, request):
+        return HttpResponseRedirect(reverse_lazy('account:timeline'))
+
+    def post(self, request):
+        logout(request)
+        return HttpResponseRedirect(reverse_lazy('account:login'))
 
 @login_required
 def timeline_paginated(request):

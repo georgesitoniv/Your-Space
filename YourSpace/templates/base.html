@@ -29,7 +29,7 @@
                     <span class="sr-only">Toggle navigation</span><a style="color:white"> Menu <a><i class="fa fa-bars"></i>
                 </button>
                 {% endif %}
-                <a class="navbar-brand page-scroll" href="#page-top">YourSpace</a>
+                <a class="navbar-brand page-scroll" href="{% url 'account:timeline' %}">YourSpace</a>
 
             </div>
 
@@ -59,15 +59,16 @@
                             
 
                             <li>
-                              <a href="{% url 'account:edit_profile' %}">
+                              <a style="text-align:center;" href="{% url 'account:edit_profile' %}">
                                  Edit Profile
                               </a>
                             </li>
-          
                             <li>
-                             
                                 {% if request.user.is_authenticated %}
-                                  <a href="{% url 'account:logout' %}">Logout</a>
+                                  <form id="logout" method="POST" action="{% url 'account:logout' %}">
+                                    {% csrf_token %}
+                                    <button style="width:100%;background:transparent; border: 0px solid transparent" type="submit">Log Out</a>
+                                  </form>
                                 {% else %}
                                  <a href="{% url 'account:login' %}">Log-in</a>
                                 {% endif %}

@@ -36,7 +36,7 @@
                       {% if user.username != request.user.username %}
                         User's birthday has not been edited
                       {% else %}
-                        Please edit your birthday
+                        <a style="color:white" href="{% url 'account:edit_profile' %}">Please edit your birthday</a>
                       {% endif %}
                     {% endif %}
                   </td>
@@ -49,7 +49,7 @@
                           {% if user.username != request.user.username %}
                             User's description has not been edited
                           {% else %}
-                            Please edit your description
+                            <a style="color:white" href="{% url 'account:edit_profile' %}">Please edit your description</a>
                           {% endif %}
                       {% endif %}
                   </td>
