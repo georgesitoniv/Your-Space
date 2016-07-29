@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Edit your information{% endblock %}
+
+{% block content %}
+
+  <div class = "container timeline">
+
+        <div class="panel panel-default">
+            <div class="panel-heading"> Edit Profile</div>
+            <div class="panel-body">
+ 
+              <form class="form-horizontal" action="."  method = "POST" enctype="multipart/form-data" role="form" style = "text-align:left;">
+                {% csrf_token %}
+                 <br>
+                 <div class="table-reponsive">
+                   
+                  <table class="table table-fixed table-no-border" style="text-align:center;">
+                    <tr>
+                      <td colspan="2">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                          <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                            {% if user.profile.photo %}
+                              <img class="user-image"  src="{{ user.profile.photo.url }}"/>        
+                            {% else %}
+                               
+                                <span style="font-size:130px;" class="glyphicon glyphicon-user">
+                                </span>                
+
+                            {% endif %}
+                          </div>
+                          <div>
+                            <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span>
+                            <span class="fileinput-exists">Change</span><input id="id_photo" name="photo" type="file"></span>
+                            <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    {% for field in user_form %}
+                      <tr>
+                        <td>
+                          {{field.label}}:
+                        </td>
+                        <td>
+                          {{field}}
+                        </td>
+                      </tr>
+                      {% if field.errors %}
+                        <tr>
+                          <td colspan="2">
+                            <div class="alert alert-danger">
+                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                              {{field.errors.as_text}}
+                            </div>
+                          </td>
+                        </tr>
+                      {% endif %}
+                    {% endfor %}
+                    <tr>
+                      <td>
+                      {{profile_form.date_of_birth.label}}:                        
+                      </td>
+                      <td>
+                        <input id="id_date_of_birth" name="date_of_birth" type="date">                       
+                      </td>                    
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        {{profile_form.description.label}}:                        
+                        <br><br>
+                        {{profile_form.description}}                      
+                      </td>                    
+                    </tr>
+
+
+                    <tr>
+                      <td colspan="2">
+                        <button type="submit" name="account_update_button" class="btn btn-success">
+                          <span class="glyphicon glyphicon-ok"></span>
+                          Save Changes
+                        </button>
+                      </td>                    
+                    </tr>
+
+                  </table>
+                 </div>
+
+              </form>
+              
+            </div>
+          </div>
+
+        {% if not request.user.profile.is_using_social_auth %}
+        <div class="panel panel-default">
+          <div class="panel-heading"> Change Password</div>
+            <div class="panel-body">
+
+                  <form class="form-horizontal" action="."  method = "POST" enctype="multipart/form-data" role="form" style = "text-align:left;">
+                    {% csrf_token %}
+                    <br>
+                    <div class="table-responsive">
+                      <table class="table table-fixed table-no-border" style="text-align:center">
+                      {% for field in password_form %}                
+                          <tr>
+                            <td>
+                              {{field.label}}:
+                            </td>
+                            <td>
+                              {{field}}
+                            </td>
+                          </tr>
+                        {% if field.errors %}
+                          <tr>
+                            <td colspan="2">
+                              <div class="alert alert-danger" style="text-align:center;">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{field.errors.as_text}}
+                              </div>
+                            </td>
+                          </tr>
+                        {% endif %}
+                      {% endfor %}
+                        <tr>
+                          <td colspan="2">
+                          <button type="submit" name="password_update_button" class="btn btn-success">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Save Changes
+                          </button>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </form>
+
+              </div>
+            </div>
+            {% endif %}
+
+  </div>
+   
+
+
+  
+
+{% endblock %}

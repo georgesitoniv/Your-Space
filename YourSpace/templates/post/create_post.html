@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+
+{% block title %}{{ page_title }}{% endblock %}
+
+
+{% block content %}
+
+
+  <div class = "container">
+    <div class="panel panel-default panel-form">
+      <div class="panel-heading" style="text-align:center">{{ page_title }}</div>
+      <div class="panel-body">
+        
+        <form class="form-horizontal" action="."  enctype="multipart/form-data" method = "POST" role="form" style = "text-align:left;">
+          {% if post.user %}
+            <div style="float:right;">
+              <button  type="submit" name="remove_post_button" class="btn btn-danger btn-circle-md">
+                <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+              </button> 
+            </div>
+          {% endif %}
+          {% csrf_token %}
+            <div class="container-fluid">
+              <div class="row" style="text-align:center;">
+                <div class="col-sm-offset-3 col-sm-4">
+                  <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                      {% if post.image %}
+                        <img src="{{post.image.url}}">
+                      {% endif %}
+                    </div>
+                    <div>
+                      <span class="btn btn-default btn-file"><span class="fileinput-new"><i class="fa fa-upload fa-lg" aria-hidden="true"></i> Select Image</span>
+                      <span class="fileinput-exists">Change</span>
+                      <input id="id_image" name="image" type="file"></span>
+                      <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times" aria-hidden="true"></i> Remove</a>
+                    </div><br>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-offset-1 col-sm-6">
+                  {{post_form.content.label}}:
+                </div>
+              </div>
+              <br>
+              <div class="row" style="text-align:center;">
+                <div class="col-sm-12">
+                  <textarea cols="42" id="id_content" maxlength="600" name="content" rows="4" placeholder="Post Content" style="resize:none"></textarea>
+                </div>
+              </div>
+              
+
+            {% if field.errors %}
+              <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {{field.errors.as_text}}
+              </div>
+            {% endif %}
+            <br>
+            <div class="row">
+              <div class="col-sm-offset-5 col-sm-5">
+                <button type="submit" name="post_button" class="btn btn-success">
+                  <span class="glyphicon glyphicon-check"></span> Post
+                </button>
+              </div>
+            </div>
+          
+          </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

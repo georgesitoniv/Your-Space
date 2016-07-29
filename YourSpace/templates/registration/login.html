@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title%}Log In  {% endblock %}
+
+{% block content%}
+
+  <div class = "container">
+
+    <div class="panel panel-default panel-form"  style="">
+      <div class="panel-heading" style="text-align:center">Log In</div>
+      <div class="panel-body">
+        <div style="text-align:center;">
+
+        </div>
+        <form class="form-horizontal" action="."  method = "POST" role="form" style = "text-align:center">
+
+
+
+          {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-offset-1 col-sm-4">
+                  {{field.label}}:
+                </div>
+                <div class="col-sm-offset-1 col-sm-3">
+                  {{field}}
+                </div>
+              </div>
+            </div>
+            {% if field.errors %}
+              <div style="color:red;">
+                {{field.errors.as_text}}
+              </div>
+            {% endif %}
+          {% endfor %}
+
+
+          <input type="hidden" name="next" value="{{ next }}"/>
+          <br>
+           <div class="form-group">
+             <div class="col-sm-offset-1 col-sm-10">
+               <button type="submit" class="btn btn-success"><i class="fa fa-sign-in fa-lg" aria-hidden="true"></i> Log In</button>
+             </div>
+           </div>
+        </form>
+        <br>
+        <a class="btn btn-info" href="{% url 'account:register' %}">Sign Up</a>
+        <a class="btn btn-primary" href="{% url "social:begin" "facebook" %}"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i> Facebook Log-In</a>
+        
+      </div>
+    </div>
+
+
+  </container>
+{% endblock %}

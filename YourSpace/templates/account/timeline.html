@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+
+
+{% block title %}Timeline{% endblock %}
+
+
+{% block content %}
+
+    {% if posts.paginator.num_pages > 1 %}
+      {% if posts.has_previous %}
+        <div class="post-previous">
+          <a href="?page={{ posts.previous_page_number }}"><span style="" class="glyphicon glyphicon-menu-left"></span></a>
+        </div>
+      {% endif %}
+
+
+      {% if posts.has_next %}
+        <div class="post-next">
+          <a href="?page={{ posts.next_page_number }}"><span style="" class="glyphicon glyphicon-menu-right"></span></a>
+        </div>
+      {% endif %}
+    {% endif %}
+
+  <div class="container timeline">
+
+    <div style="margin:auto">
+
+      <form method="POST" action="." style="text-align:left;">
+        {% csrf_token %}
+        <div class="btn-group" role="group">
+          <a class="btn btn-primary" href="{% url 'post:create_post' %}">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            Create a Post
+          </a> 
+          <button type="submit" name="sortByNewest_button" class="btn btn-default">
+            <span class="glyphicon glyphicon-sort-by-order-alt"></span>
+              Newest
+            </button>
+          <button type="submit" name="sortByOldest_button" class="btn btn-default">
+            <span class="glyphicon glyphicon-sort-by-order"></span>
+            Oldest
+          </button>
+          <button type="submit" name="sortByPopularity_button" class="btn btn-default">
+            <span class="glyphicon glyphicon-fire"></span>
+            Most Popular
+          </button>
+        </div>
+      </form>
+
+
+      {% if post_count != 0 %}
+
+        {% for post in posts %}
+          {% include 'post/post.html' %}
+        {% endfor %}
+ 
+      {% else %}
+        <br>
+        <div class="panel panel-default" style="text-align:center;mid-height:300px;height:auto; width:auto;">           
+          <div class="panel-body">
+            You have not followed anyone<br>
+            <a href="{% url 'account:user_list' %}">Follow Users</a>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+
+
+  </div>
+
+{% endblock %}

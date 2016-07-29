@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title%}Users{% endblock %}
+
+{% block content%}
+  <div class = "container">
+
+    <div class="panel panel-default panel-form" >
+      <div class="panel-heading">People</div>
+      <div class="panel-body" style="max-height:700px;overflow-x:hidden;">
+
+        <div style="text-align:center;">
+
+        </div>
+        <table class="table" style="width:100%;">
+
+            <tbody>
+
+                {% for user in users %}
+                    {% if request.user.username != user.username%}
+                       <tr>
+                        <td style="text-align:center" rowspan="2">
+                        {% if user.profile.photo %}
+                            <div class="post-user-image">
+                                <a href="{% url 'account:profile' username=user.username%}">
+                                    <img  src="{{ user.profile.photo.url }}">
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="post-user-image">
+                                <a href="{% url 'account:profile' username=user.username%}">      
+                                <span class="no-image glyphicon glyphicon-user"></span>     
+                                </a>
+                            </div>
+                        {% endif %}
+                        </td>
+                        <td>
+                            {% if user.first_name and user.last_name %}
+                                {{user.first_name}} {{user.last_name}}
+                            {% else %}
+                                {{user.username }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Followers: {{ user.profile.followers.count }}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+   
+        
+
+    
+      </div>
+    </div>
+
+
+  </container>
+{% endblock %}
