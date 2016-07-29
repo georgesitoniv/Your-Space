@@ -6,17 +6,10 @@ from .models import Profile
 
 
 class LogInForm(forms.Form):
-    """
-        Form for logging in. Contains username and password fields. This form will be used if the user does not want
-        to log in using facebook.
-    """
     username = forms.CharField(max_length="40")
     password = forms.CharField(widget=forms.PasswordInput)
 
 class UserRegistrationForm(forms.ModelForm):
-    """
-        Registers the user.
-    """
     alpanumeric = RegexValidator(regex="^[a-zA-Z0-9]*$", message="Please use alpanumeric characters only")
     name = RegexValidator(regex="^[a-zA-Z ]*$", message="Please enter a valid name")
     username = forms.CharField(label="Username", min_length="6", max_length="40", required = True, validators=[alpanumeric,])
@@ -29,8 +22,8 @@ class UserRegistrationForm(forms.ModelForm):
         model = User
         fields = ('username','first_name','last_name','email')
     
-
     def clean_email(self):
+        """Raises a validation error if email is already used or left blank."""
         email = self.cleaned_data['email']
         if not email:
             raise forms.ValidationError("Email is required")
@@ -48,6 +41,7 @@ class UserRegistrationForm(forms.ModelForm):
         return cd['password_validate']
 
     def clean(self):
+        """Raises a validation error when any form data contain's trailing whitespaces.'"""
         cd = self.cleaned_data
         for field in cd:
             if cd[field] != cd[field].strip():
@@ -55,10 +49,6 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class PasswordChangeForm(forms.Form):
-    """
-        Form that changes the user's password.
-    """
-    
     new_password = forms.CharField(label="New Password", widget=forms.PasswordInput)
     validate_new_password = forms.CharField(label="Repeat New Password", widget=forms.PasswordInput)
 
@@ -72,10 +62,6 @@ class PasswordChangeForm(forms.Form):
         return cd['validate_new_password']
 
 class UserEditForm(forms.ModelForm):
-    """
-        Form that will enable the user to edit his information
-    """
-    
     name = RegexValidator(regex="^[a-zA-Z ]*$", message="Please enter a valid name")
     first_name = forms.CharField(label="First Name", max_length="50", required = True, validators=[name,])
     last_name = forms.CharField(label="Last Name", max_length="50", required = True, validators=[name,])
@@ -86,19 +72,13 @@ class UserEditForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'email')
 
     def clean(self):
+        """Raises a validation error when any form data contain's trailing whitespaces.'"""
         cd = self.cleaned_data
         for field in cd:
             if cd[field] != cd[field].strip():
                 raise forms.ValidationError("There are trailing whitespaces")
-  
-
-
 
 class ProfileEditForm(forms.ModelForm):
-    """
-        Form that will enable the user to edit his profile
-    """
-    
     class Meta:
         model = Profile
         fields = ('date_of_birth', 'photo','description')
@@ -110,5 +90,3 @@ class ProfileEditForm(forms.ModelForm):
                 'style':'resize:none'
                 }),
         }
-
-

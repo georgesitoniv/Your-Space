@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
-from braces.views import AnonymousRequiredMixin
+from braces.views import AnonymousRequiredMixin, LoginRequiredMixin
 from .forms import LogInForm, UserRegistrationForm, UserEditForm, ProfileEditForm, PasswordChangeForm
 from .models import Profile
 from post.models import Post
@@ -17,8 +17,9 @@ from post.models import Post
 
 class LogIn(AnonymousRequiredMixin, View):
     """
-        Log in view. Uses anonymous required mixin to prevent the user to access this view when logged in
-    """ 
+    Returns a view containing a form for 
+    user login if the user is anonymous.
+    """
     template = "registration/login.html"
 
     def get(self, request):
@@ -26,7 +27,6 @@ class LogIn(AnonymousRequiredMixin, View):
         context = {
             'form': form
         }
-
         return render(request, self.template, context)
 
     def post(self, request):
@@ -37,23 +37,20 @@ class LogIn(AnonymousRequiredMixin, View):
 
             if user is not None:
                 if user.is_active:
-
                     login(request, user)
                     return HttpResponseRedirect(reverse_lazy("account:timeline"))
                 else:
                     message.error(request,"Account Disabled")
             else:
                 messages.error(request, "Invalid Username or Password")
-
         context = {
             'form': form
         }
-
         return render(request, self.template, context)
 
 class LogOut(View):
-
     def get(self, request):
+        """Redirects to the timeline view if accessed via url."""
         return HttpResponseRedirect(reverse_lazy('account:timeline'))
 
     def post(self, request):
@@ -62,16 +59,14 @@ class LogOut(View):
 
 @login_required
 def timeline_paginated(request):
- 
     """
-        Paginated Timeline view. Contains post by followed users
+    Filters post by posts by followed users and posts by logged-in user
+    and returns a view containing those posts.
     """
-
     if not Profile.objects.filter(user=request.user):
         profile = Profile.objects.create(user=request.user)
 
     post_list = Post.objects.filter(user__in = request.user.profile.get_timeline_users()).order_by("-date_updated")
-
 
     if request.method == "POST":
         if "sortByOldest_button" in request.POST:
@@ -79,12 +74,9 @@ def timeline_paginated(request):
         if "sortByPopularity_button" in request.POST:
             post_list = post_list.annotate(num_likes=Count("likes")).order_by("-num_likes")
 
-
-
     paginator = Paginator(post_list, 15)
     page = request.GET.get('page')
-
-  
+ 
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
@@ -102,13 +94,12 @@ def timeline_paginated(request):
 @login_required
 def profile(request, username='test'):
     """
-        Profile view. Let's the logged user to see his own profile and profile of other users
-    """ 
+    Returns a view containing a user's profile, posts, followers, and, followed users.
+    """
     try:
         user = User.objects.get(username=username)
     except User.DoesNotExist:
         return HttpResponse("Error")
-
 
     if request.method == "POST":
         if "follow_button" in request.POST:
@@ -128,7 +119,6 @@ def profile(request, username='test'):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)    
 
-    
     context = {
         'user': user, 
         'posts': posts,
@@ -137,33 +127,24 @@ def profile(request, username='test'):
              
     }
 
-
     return render(request, 'account/profile.html', context)
 
 def user_list(request):
-    """
-         A view that displays all users
-    """ 
+    """Returns a view containing all registered users."""
     users = User.objects.all()
-
     context = {
         'users' : users,
     }
-
     return render(request, 'account/user_list.html', context)
 
 class RegisterForm(View):
-    """
-        Register view. This view UserRegistrationForm and allows users to register.
-    """ 
     template = "account/register.html"
 
     def get(self, request):
         user_form = UserRegistrationForm()
         context={
             'user_form':user_form,
-        }
-        
+        }       
         return render(request, self.template, context)
 
     def post(self, request):
@@ -180,14 +161,15 @@ class RegisterForm(View):
         context = {
             'user_form': user_form,
         }
-
         return render(request, self.template, context)
 
-class ProfileEdit(View):
+class ProfileEdit(LoginRequiredMixin,View):
     """
-      This view lets users to edit their information and profile. It uses two forms which are
-      UserEditForm and ProfileEditForm
-    """ 
+    Returns a view containing three forms. 
+    UserEditForm and ProfileEditForm was implemented to
+    edit a user's information. While, PasswordChangeForm
+    was implemented to change the user's password
+    """
     template = 'account/edit_profile.html'
 
     def get(self, request):
@@ -215,7 +197,8 @@ class ProfileEdit(View):
                     messages.error(request, 'Email already used.')
             else:
                 messages.error(request, "Please make sure each field contains valid characters and please do not add trailing whitespaces")
-        elif "password_update_button" in request.POST:                          
+        elif "password_update_button" in request.POST:
+            """Changes the user's password and will end the session if the form is valid."""                          
             user_form = UserEditForm(instance=request.user)
             profile_form = ProfileEditForm(instance=request.user.profile)
             password_form = PasswordChangeForm(data=request.POST)
@@ -223,14 +206,11 @@ class ProfileEdit(View):
                 cd = password_form.cleaned_data
                 request.user.set_password(cd['new_password']) 
                 request.user.save()
-                request.user.is_authenticated = False    
+                logout(request)    
                 self.template = "registration/password_change_done.html"
             else:
                 messages.error(request, "Please make sure each field contains valid characters and please do not add trailing whitespaces")
-        
 
-        
-                  
         context = {
             'user_form' : user_form,
             'profile_form' : profile_form,

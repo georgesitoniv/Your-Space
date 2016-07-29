@@ -10,10 +10,8 @@ from .forms import PostForm, CommentForm
 
 @login_required
 def create_post(request):
-
     template = "post/create_post.html"   
     post_form = PostForm()
-
 
     if request.method == "POST":
         if "post_button" in request.POST:   
@@ -27,16 +25,11 @@ def create_post(request):
                         post_form = PostForm()
                 else:
                     post_form = PostForm()
-                    messages.error(request, "Empty posts are restricted")
-
-
-
-        
+                    messages.error(request, "Empty posts are restricted")                       
     context = {
         'post_form':post_form,
         'page_title':'Create a Post',  
     }
-
     return render(request, template, context)
 
 @login_required
@@ -61,36 +54,30 @@ def edit_post(request, id = '1'):
                     messages.success(request, "Post Successfully Edited")
                 else:
                     post_form = PostForm()
-                    messages.error(request, "Empty posts are restricted")
-                    
+                    messages.error(request, "Empty posts are restricted")                    
         elif "remove_post_button" in request.POST:
             user = post.user
             post.delete()
             messages.success(request, "Post successfully deleted")
             return HttpResponseRedirect(reverse_lazy('account:profile',kwargs={'username':user.username}))
-           
-        else:
-            pass
-        
+
     context = {
         'post_form':post_form,
         'page_title':'Edit Post',
         'post': post,
     }
-
     return render(request, template, context)
 
 @login_required
 def post_instance(request, id = '1'):
+    """Returns a view that enables users to view or post comments and like the post instance"""
     template = "post/post_instance.html"
     post = Post.objects.get(id=id)
     comment_form = CommentForm()
     try:    
         comments = post.postcomments_set.all()
-
     except PostComments.DoesNotExist():
         comments = None
-
 
     if request.method == "POST":
         if "like_button" in request.POST:
@@ -113,9 +100,6 @@ def post_instance(request, id = '1'):
                 else:
                     messages.error(request, "Please provide a comment")
             comment_form = CommentForm()
- 
-        else:
-            pass
 
     context = {
         'post': post,
@@ -124,6 +108,4 @@ def post_instance(request, id = '1'):
         'comment_form':comment_form,
         'comments':comments,
     }
-
     return render(request, template, context)
-    

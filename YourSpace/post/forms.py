@@ -5,7 +5,6 @@ from post.models import Post, PostComments
 
 
 class PostForm(forms.ModelForm):
-
     class Meta:
         model = Post
         fields = ('image','content')
@@ -18,7 +17,6 @@ class PostForm(forms.ModelForm):
         }
 
 class CommentForm(forms.ModelForm):
-    
     class Meta:
         model = PostComments
         fields = ('content',)
