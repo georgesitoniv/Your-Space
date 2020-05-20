@@ -1,5 +1,5 @@
 defusedxml==0.4.1
-Django==1.8
+Django==1.11.28
 django-allauth==0.25.2
 django-braces==1.9.0
 django-endless-pagination==2.0
